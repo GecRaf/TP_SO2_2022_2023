@@ -1,0 +1,9 @@
+﻿  server.c
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(6,11): warning C4129: '/': unrecognized character escape sequence
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(7,11): warning C4129: '_': unrecognized character escape sequence
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(31,31): warning C4047: '==': 'int' differs in levels of indirection from 'void *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(39,43): warning C4047: 'function': 'const wchar_t *' differs in levels of indirection from 'TCHAR'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(39,27): warning C4024: 'wcscpy_s': different types for formal and actual parameter 3
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(83,24): warning C4047: 'function': 'TCHAR' differs in levels of indirection from 'void *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(83,20): warning C4024: 'server_manager': different types for formal and actual parameter 2
+LINK : fatal error LNK1168: cannot open C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe for writing
