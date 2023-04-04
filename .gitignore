@@ -50,3 +50,13 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+*.vsidx
+*.lock
+*.db
+*.db-shm
+*.db-wal
+*.opendb
+TP_SO2_2022_2023/.vs/TP_SO2_2022_2023/v17/.suo
+*.vcxproj
+*.filters
+*.user
