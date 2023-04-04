@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="registry.c" />
     <ClCompile Include="server.c" />
   </ItemGroup>
   <ItemGroup>
