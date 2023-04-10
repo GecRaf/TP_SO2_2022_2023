@@ -15,7 +15,7 @@
 
 #define MAX_ROAD_LANES 8
 #define MAX_CARS_PER_LANE 8
-#define NAX_BOARD_COL 20
+#define MAX_BOARD_COL 20
 #define MAX_BOARD_ROW 10
 #define MAX_GAME_TIME 10000
 #define DEFAULT_GAME_TIME 60
@@ -26,6 +26,24 @@
 
 
 // Structs
+
+typedef struct {
+	int direction;
+	int number_of_cars;
+	int car_speed;
+	int car_distance;
+} Lanes;
+
+typedef struct {
+	TCHAR board[MAX_BOARD_ROW][MAX_BOARD_COL];
+	int game_time;
+	int number_of_frogs;
+	Lanes l[MAX_ROAD_LANES]; // Decide how the number of initial lanes is defined in the struct
+} Game;
+
+typedef struct {
+	Game* g;
+} ControlData;
 
 // Functions
 

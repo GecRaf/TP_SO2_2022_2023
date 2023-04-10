@@ -9,7 +9,7 @@
 #define TAM 200
 
 
-BOOL serverRegistry(DWORD*, DWORD*) {
+BOOL serverRegistry(DWORD* idk, DWORD* idk2) {
 
     HKEY chave;
     TCHAR par_nome[TAM] = TEXT("ROAD_LANES");

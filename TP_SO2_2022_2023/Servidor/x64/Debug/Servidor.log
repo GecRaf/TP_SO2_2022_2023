@@ -1,10 +1,11 @@
-﻿  server.c
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(6,11): warning C4129: '/': sequência de escape de caractere não reconhecida
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(7,11): warning C4129: '_': sequência de escape de caractere não reconhecida
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(31,31): warning C4047: '==': 'int' difere em níveis de indireção de 'void *'
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(39,43): warning C4047: 'função': 'const wchar_t *' difere em níveis de indireção de 'TCHAR'
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(39,27): warning C4024: 'wcscpy_s': tipos diferentes para parâmetro formal e real 3
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(83,24): warning C4047: 'função': 'TCHAR' difere em níveis de indireção de 'void *'
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(83,20): warning C4024: 'server_manager': tipos diferentes para parâmetro formal e real 2
-  LINK : C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe não encontrado ou não compilado pelo o último link incremental; executando link completo
-  Servidor.vcxproj -> C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
+﻿  registry.c
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(12,37): error C2055: expected formal parameter list, not a type list
+  server.c
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(6,11): warning C4129: '/': unrecognized character escape sequence
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(7,11): warning C4129: '_': unrecognized character escape sequence
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(31,31): warning C4047: '==': 'int' differs in levels of indirection from 'void *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(39,43): warning C4047: 'function': 'const wchar_t *' differs in levels of indirection from 'TCHAR'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(39,27): warning C4024: 'wcscpy_s': different types for formal and actual parameter 3
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(83,24): warning C4047: 'function': 'TCHAR' differs in levels of indirection from 'void *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(83,20): warning C4024: 'server_manager': different types for formal and actual parameter 2
+  Generating Code...
