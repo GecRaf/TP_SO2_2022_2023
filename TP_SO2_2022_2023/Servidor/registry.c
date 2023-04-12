@@ -3,18 +3,15 @@
 #include <tchar.h>
 #include <fcntl.h>
 #include <synchapi.h>
-
 #include "server.h"
 
 #define TAM 200
 
 
-BOOL RegistryVerify(DWORD* roadLanes) {
+BOOL verifyRegistry() {
 
-    HKEY chave;
-    TCHAR par_nome[TAM] = TEXT("ROAD_LANES");
+    HKEY hKey;
     DWORD par_valor = MAX_ROAD_LANES;
-    TCHAR chave_nome[TAM] = TEXT("Software\\TP_SO2_2122");
     TCHAR par_nome_carspeed[TAM] = TEXT("CARSPEED");
     DWORD par_valor_carspeed = 5;
     DWORD resultado;
@@ -27,103 +24,107 @@ BOOL RegistryVerify(DWORD* roadLanes) {
 
 
     //Tentar abrir a chave
-    if (RegOpenKeyEx(HKEY_CURRENT_USER, chave_nome, 0, KEY_ALL_ACCESS, &chave) != ERROR_SUCCESS) {
+    if (RegOpenKeyEx(HKEY_CURRENT_USER, KEY_PATH, 0, KEY_ALL_ACCESS, &hKey) != ERROR_SUCCESS) {
 
         //Erro ao abrir a chave
-        _tprintf(TEXT("[Registry.c/serverRegistry] A chave ainda não foi criada\n"));
+        _tprintf(TEXT("[Registry.c/serverRegistry] Registry key doesn't exist\n"));
         return FALSE;
     }
     else {
-        _tprintf(TEXT("[Registry.c/serverRegistry]Chave aberta\n"));
+        _tprintf(TEXT("[Registry.c/serverRegistry] Registry key opened\n"));
 
         //ler valor da chave
-        _tprintf(_T("[Registry.c/serverRegistry] A obter valor do registry...\n"));
+        _tprintf(_T("[Registry.c/serverRegistry] Obtaining registry key values...\n"));
         DWORD valor = 0;
         DWORD length = sizeof(DWORD);
 
-        if (RegQueryValueEx(chave, par_nome, NULL, NULL, (LPBYTE)(&valor), &length) != ERROR_SUCCESS) {
-            _tprintf(_T("[Registry.c/serverRegistry] Não foi possível obter o valor a partir da chave\n"));
-
-            RegistryCreate(par_valor, par_nome_carspeed);
-            
+        if (RegQueryValueEx(hKey, KEY_ROAD_LANES, NULL, NULL, (LPBYTE)(&valor), &length) != ERROR_SUCCESS) {
+            _tprintf(_T("[Registry.c/serverRegistry] Couldn't obtain key value\n"));
+            createRegistry(MAX_ROAD_LANES, KEY_ROAD_LANES);
         }
         else {
-            _tprintf(_T("[Registry.c/serverRegistry] Valor obtido do registry: %ld\n"), valor);
+            _tprintf(_T("[Registry.c/serverRegistry] Obtained key value on registry: %ld\n"), valor);
 
             if (valor < 0 || valor > 8) {
-                _tprintf(_T("[Registry.c/serverRegistry] O Valor obtido do registry é invalido. Será aplicado o valor default de 8\n"));
+                _tprintf(_T("[Registry.c/serverRegistry] Invalid value obtained from registry. The value must be between 0 and 8. Default value of 8 will be applied.\n")); //Review this. This shouldn't even happen. 
+                                                                                                                                                                            //Every time a value is written to the registry, it should be checked if it's valid.
                 valor = 8;
             }
 
-            *roadLanes = valor;
-
-            if (RegQueryValueEx(chave, par_nome_carspeed, NULL, NULL, (LPBYTE)(&valor), &length) != ERROR_SUCCESS) {
+            if (RegQueryValueEx(hKey, KEY_INIT_SPEED, NULL, NULL, (LPBYTE)(&valor), &length) != ERROR_SUCCESS) {
 
                 _tprintf(_T("[Registry.c/serverRegistry] Não foi possível obter o valor a partir da chave\n"));
 
-                RegistryCreate(par_valor, par_nome_carspeed);
+                createRegistry(MAX_CAR_SPEED, KEY_INIT_SPEED);
 
             }
 
         }
 
-        RegCloseKey(chave);
+        RegCloseKey(hKey);
         return TRUE;
     }
 }
 
 
-BOOL RegistryCreate(DWORD* roadLanes, DWORD* carspeed) {
-    HKEY chave;
-    TCHAR par_nome[TAM] = TEXT("ROAD_LANES");
-    DWORD par_valor = MAX_ROAD_LANES;
-    TCHAR chave_nome[TAM] = TEXT("Software\\TP_SO2_2223\\");
-    TCHAR par_nome_carspeed[TAM] = TEXT("CARSPEED");
-    DWORD par_valor_carspeed = 5;
-    DWORD resultado;
+BOOL createRegistry(DWORD* roadLanes, DWORD* carspeed) {
+    HKEY hKey;
+    DWORD result;
 
     //tentar criar a chave
-    if (RegCreateKeyEx(HKEY_CURRENT_USER, chave_nome, 0, NULL, 0, KEY_ALL_ACCESS, NULL, &chave, &resultado) != ERROR_SUCCESS) {
+    if (RegCreateKeyEx(HKEY_CURRENT_USER, KEY_PATH, 0, NULL, 0, KEY_ALL_ACCESS, NULL, &hKey, &result) != ERROR_SUCCESS) {
         //Não foi possível criar chave, mostrar o erro
-        DWORD error = GetLastError();
-        _tprintf(TEXT("[Registry.c/serverRegistry] Erro ao criar a chave: [%d]\n"), error);
+        _ftprintf(stderr, TEXT("[Registry.c/serverRegistry] Error creating key!\n"));
         return FALSE;
 
     }
     else {
-        if (resultado == REG_CREATED_NEW_KEY) {
-            _tprintf(TEXT("[Registry.c/serverRegistry] Chave criada\n"));
+        if (result == REG_CREATED_NEW_KEY) {
+            _tprintf(TEXT("[Registry.c/serverRegistry] Registry key created\n"));
 
             //criar registo par chave-valor road lanes
-            if (RegSetValue(chave, par_nome, 0, &par_valor, sizeof(par_valor)) == ERROR_SUCCESS) {
-                _tprintf(_T("[Registry.c/serverRegistry] Par criado: chave %s | valor %i\n"), par_nome, par_valor);
-                *roadLanes = par_valor;
+            if (RegSetValue(hKey, KEY_ROAD_LANES, 0, &roadLanes, sizeof(roadLanes)) == ERROR_SUCCESS) {
+                _tprintf(_T("[Registry.c/serverRegistry] Registry key created: key %s | value %i\n"), KEY_ROAD_LANES, roadLanes);
             }
             else {
-                _tprintf(TEXT("[Registry.c/serverRegistry] Houve um erro ao criar o par chave-valor\n"));
-                DWORD error = GetLastError();
-                _tprintf(TEXT("Error [%d]\n"), error);
+                _ftprintf(stderr, TEXT("[Registry.c/serverRegistry] Could not set registry value!\n"));
                 return FALSE;
             }
 
             //criar registo par chave-valor car speed
-            if (RegSetValue(chave, par_nome_carspeed, 0, REG_DWORD, &par_valor_carspeed, sizeof(par_valor_carspeed)) == ERROR_SUCCESS) {
-                _tprintf(_T("[Registry.c/serverRegistry] Par criado: chave %s | valor %i\n"), par_nome_carspeed, par_valor_carspeed);
-                *carspeed = par_valor_carspeed;
+            if (RegSetValue(hKey, KEY_INIT_SPEED, 0, REG_DWORD, &carspeed, sizeof(carspeed)) == ERROR_SUCCESS) {
+                _tprintf(_T("[Registry.c/serverRegistry] Registry key created: key %s | value %i\n"), KEY_INIT_SPEED, carspeed);
             }
             else {
-                _tprintf(TEXT("[Registry.c/serverRegistry] Houve um erro ao criar o par chave-valor\n"));
-                DWORD error = GetLastError();
-                _tprintf(TEXT("Error [%d]\n"), error);
+                _ftprintf(stderr, TEXT("[Registry.c/serverRegistry] Could not set registry value!\n"));
                 return FALSE;
             }
         }
-        else { //impossível criar a chave
-            _tprintf(_T("[Registry.c/serverRegistry] Não foi possível criar a chave\n"));
-            DWORD error = GetLastError();
-            _tprintf(TEXT("Error [%d]\n"), error);
-            return FALSE;
+        else if (result == REG_OPENED_EXISTING_KEY){
+            _ftprintf(stderr, TEXT("[Registry.c/serverRegistry] Registry key already exists!\n"));
+
+            //criar registo par chave-valor road lanes
+            if (RegSetValueEx(hKey, KEY_ROAD_LANES, 0, REG_DWORD, &roadLanes, sizeof(roadLanes)) == ERROR_SUCCESS) {
+                _tprintf(_T("[Registry.c/serverRegistry] Registry key created: key %s | value %i\n"), KEY_ROAD_LANES, roadLanes);
+            }
+            else {
+                _ftprintf(stderr, TEXT("[Registry.c/serverRegistry] Could not set registry value!\n"));
+                return FALSE;
+            }
+
+            //criar registo par chave-valor car speed
+            if (RegSetValueEx(hKey, KEY_INIT_SPEED, 0, REG_DWORD, &carspeed, sizeof(carspeed)) == ERROR_SUCCESS) {
+                _tprintf(_T("[Registry.c/serverRegistry] Registry key created: key %s | value %i\n"), KEY_INIT_SPEED, carspeed);
+            }
+            else {
+                _ftprintf(stderr, TEXT("[Registry.c/serverRegistry] Could not set registry value!\n"));
+                return FALSE;
+            }
         }
+        else {
+			_ftprintf(stderr, TEXT("[Registry.c/serverRegistry] Error creating key!\n"));
+			return FALSE;
+		}
         return TRUE;
     }
 

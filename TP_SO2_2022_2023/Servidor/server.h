@@ -15,14 +15,17 @@
 
 #define MAX_ROAD_LANES 8
 #define MAX_CARS_PER_LANE 8
+#define MAX_CAR_SPEED 10
 #define MAX_BOARD_COL 20
 #define MAX_BOARD_ROW 10
 #define MAX_GAME_TIME 10000
 #define DEFAULT_GAME_TIME 60
 
-#define KEY_PATH TEXT("")
+#define KEY_PATH TEXT("Software\\TP_SO2_2122")
 #define KEY_ROAD_LANES TEXT("RoadLanes")
 #define KEY_INIT_SPEED TEXT("InitialSpeed")
+
+
 
 
 // Structs
@@ -56,7 +59,7 @@ typedef struct {
 } ControlData;
 
 // Functions
-BOOL registryVerifier();
-BOOL registryCreater();
+BOOL verifyRegistry();
+BOOL createRegistry(DWORD* roadLanes, DWORD* carspeed);
 
 #endif // !SERVER_H

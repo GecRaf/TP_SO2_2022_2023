@@ -3,8 +3,8 @@
 void ascii_printer() {
 	_tprintf(TEXT("\t   ____                          \n"));
 	_tprintf(TEXT("\t  / __/______  ___ ____ ____ ____\n"));
-	_tprintf(TEXT("\t / _// __/ _ \/ _ `/ _ `/ -_) __/\n"));
-	_tprintf(TEXT("\t/_/ /_/  \___/\_, /\_, /\__/_/   \n"));
+	_tprintf(TEXT("\t / _// __/ _ \\/ _ `/ _ `/ -_) __/\n"));
+	_tprintf(TEXT("\t/_/ /_/  \\___/\\_, /\\_, /\\__/_/   \n"));
 	_tprintf(TEXT("\t             /___//___/          \n"));
 	_tprintf(TEXT("\t[*] SERVER INITIALIZED [*]\n"));
 	_tprintf(TEXT("\n"));
@@ -69,8 +69,7 @@ void init_server(int argc, TCHAR* argv[]) {
 	ascii_printer();
 	
 	// Verify if there is a registry file already
-
-	BOOL result = 0;
+	BOOL result = verifyRegistry();
 	
 	if (!result)
 	{
@@ -79,11 +78,13 @@ void init_server(int argc, TCHAR* argv[]) {
 		int nr_of_lanes = 0;
 		int init_speed = 0;
 		
-		if (argc == 2) {
+		if (argc == 3) {
 			nr_of_lanes = _ttoi(argv[1]);
 			init_speed = _ttoi(argv[2]);
-			//BOOL result = registryCreater(nr_of_lanes, init_speed);
-			BOOL result = 1;
+			// Print values
+			_tprintf(TEXT("\t[Server.c/init_server] Number of lanes: %d\n"), nr_of_lanes);
+			_tprintf(TEXT("\t[Server.c/init_server] Initial speed: %d\n"), init_speed);
+			BOOL result = createRegistry(nr_of_lanes, init_speed);
 			if (!result) {
 				_tprintf(TEXT("\t[Server.c/init_server] Error creating registry file!\n"));
 				return -1;
