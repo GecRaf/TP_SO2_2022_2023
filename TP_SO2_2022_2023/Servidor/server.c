@@ -46,19 +46,15 @@ char server_manager(TCHAR command_received) {
 	return 0;
 }
 
-
-int _tmain(int argc, TCHAR* argv[]) {
-	HANDLE hSemaphoreServer;
+void init_server(int argc, TCHAR* argv[]) {
+	// Initialize structs
+	ControlData cd;
+	Game* game = (Game*)malloc(sizeof(Game));
+	cd.g = game;
 	
-	#ifdef UNICODE
-		_setmode(_fileno(stdin), _O_WTEXT);
-		_setmode(_fileno(stdout), _O_WTEXT);
-		_setmode(_fileno(stderr), _O_WTEXT);
-	#endif // UNICODE
-
 	// Server instance controller
 
-	hSemaphoreServer = CreateSemaphore(
+	HANDLE hSemaphoreServer = CreateSemaphore(
 		NULL,
 		1,
 		MAX_SERVER,
@@ -66,11 +62,112 @@ int _tmain(int argc, TCHAR* argv[]) {
 	);
 
 	if (GetLastError() == ERROR_ALREADY_EXISTS) {
-		_ftprintf(stderr,TEXT("\n\t[!] Error! Another instance of 'server' already running\n"));
+		_ftprintf(stderr, TEXT("\n\t[!] Error! Another instance of 'server' already running\n"));
 		return -1;
 	}
+
+	ascii_printer();
 	
+	// Verify if there is a registry file already
+
+	BOOL result = 0;
+	
+	if (!result)
+	{
+		_tprintf(TEXT("[Server.c/init_server] No values stored in Registry!\n"));
+		// Ask for number of lanes and initial speed to the user
+		int nr_of_lanes = 0;
+		int init_speed = 0;
+		
+		if (argc == 2) {
+			nr_of_lanes = _ttoi(argv[1]);
+			init_speed = _ttoi(argv[2]);
+			//BOOL result = registryCreater(nr_of_lanes, init_speed);
+			BOOL result = 1;
+			if (!result) {
+				_tprintf(TEXT("\t[Server.c/init_server] Error creating registry file!\n"));
+				return -1;
+			}
+		}
+		else
+		{
+			_tprintf(TEXT("[Server.c/init_server] Invalid number of arguments!\n"));
+			return -1;
+		}
+	}
+	else
+	{
+		_tprintf(TEXT("\t[Server.c/init_server] Values stored in Registry!\n"));
+	}
+
+	// Shared memory 
+	
+	HANDLE hMapFile = CreateFileMapping(
+		INVALID_HANDLE_VALUE,    // use paging file
+		NULL,                    // default security
+		PAGE_READWRITE,          // read/write access
+		0,                       // maximum object size (high-order DWORD)
+		sizeof(ControlData),                // maximum object size (low-order DWORD)
+		TEXT("SharedMemory"));                 // name of mapping object
+
+	if (hMapFile == NULL)
+	{
+		_tprintf(TEXT("[Server.c/init_server] Error creating shared memory\n"));
+		return 1;
+	}
+
+	_tprintf(TEXT("[Server.c/init_server] Shared memory created successfully\n"));
+
+	// Create pointer for Shared Memory
+	cd.shared_memmory_ptr = (ControlData*)MapViewOfFile(hMapFile,   // handle to map object
+		FILE_MAP_ALL_ACCESS, // read/write permission
+		0,
+		0,
+		sizeof(ControlData));
+	
+	if (cd.shared_memmory_ptr == NULL || cd.shared_memmory_ptr == INVALID_HANDLE_VALUE){
+			_tprintf(TEXT("[Server.c/init_server] Error creating shared memory pointer\n"));
+			return 1;
+	}
+	_tprintf(TEXT("[Server.c/init_server] Shared memory pointer created successfully\n"));
+
+	// Create a thread to manage the server
+
+	HANDLE hThread = CreateThread(
+		NULL,
+		0,
+		(LPTHREAD_START_ROUTINE)server_manager,
+		NULL,
+		0,
+		NULL
+	);
+
+	if (hThread == NULL)
+	{
+		_tprintf(TEXT("[Server.c/init_server] Error creating server manager thread\n"));
+		return;
+	}
+
+	_tprintf(TEXT("[Server.c/init_server] Server manager thread created successfully\n"));
+
 	server_manager(NULL);
+	
+
+	UnmapViewOfFile(cd.shared_memmory_ptr);
+	
+	return 0;
+}
+
+
+int _tmain(int argc, TCHAR* argv[]) {
+	#ifdef UNICODE
+		_setmode(_fileno(stdin), _O_WTEXT);
+		_setmode(_fileno(stdout), _O_WTEXT);
+		_setmode(_fileno(stderr), _O_WTEXT);
+	#endif // UNICODE
+	
+	init_server(argc, argv);
+		
 	
 	return 0;
 }

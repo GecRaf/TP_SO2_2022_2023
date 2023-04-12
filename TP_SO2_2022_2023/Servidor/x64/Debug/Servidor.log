@@ -1,11 +1,16 @@
-﻿  registry.c
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(12,37): error C2055: expected formal parameter list, not a type list
-  server.c
+﻿  server.c
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(6,11): warning C4129: '/': unrecognized character escape sequence
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(7,11): warning C4129: '_': unrecognized character escape sequence
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(31,31): warning C4047: '==': 'int' differs in levels of indirection from 'void *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(39,43): warning C4047: 'function': 'const wchar_t *' differs in levels of indirection from 'TCHAR'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(39,27): warning C4024: 'wcscpy_s': different types for formal and actual parameter 3
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(83,24): warning C4047: 'function': 'TCHAR' differs in levels of indirection from 'void *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(83,20): warning C4024: 'server_manager': different types for formal and actual parameter 2
-  Generating Code...
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(22,31): warning C4047: '==': 'int' differs in levels of indirection from 'void *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(30,43): warning C4047: 'function': 'const wchar_t *' differs in levels of indirection from 'TCHAR'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(30,27): warning C4024: 'wcscpy_s': different types for formal and actual parameter 3
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(66,12): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(89,14): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(95,13): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(116,11): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(122,24): warning C4133: '=': incompatible types - from 'ControlData *' to 'LPCTSTR'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(130,12): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(153,21): warning C4047: 'function': 'TCHAR' differs in levels of indirection from 'void *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(153,17): warning C4024: 'server_manager': different types for formal and actual parameter 1
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(158,10): warning C4098: 'init_server': 'void' function returning a value
+  Servidor.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe

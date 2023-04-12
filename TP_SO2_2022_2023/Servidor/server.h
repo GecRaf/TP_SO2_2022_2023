@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 #define MAX_SERVER 1
-#define MAX_FROG 2
+#define MAX_FROGS 2
 #define SEMAPHORE_SERVER TEXT("SERVER_INSTANCE")
 
 #define MAX_ROAD_LANES 8
@@ -35,17 +35,28 @@ typedef struct {
 } Lanes;
 
 typedef struct {
+	int id;
+	int score;
+	int position_x;
+	int position_y;
+} Frogs;
+
+typedef struct {
 	TCHAR board[MAX_BOARD_ROW][MAX_BOARD_COL];
 	int game_time;
 	int number_of_frogs;
-	Lanes l[MAX_ROAD_LANES]; // Decide how the number of initial lanes is defined in the struct
+	Lanes l[MAX_ROAD_LANES];
+	Frogs f[MAX_FROGS];
+	int points;
 } Game;
 
 typedef struct {
 	Game* g;
+	LPCTSTR shared_memmory_ptr;
 } ControlData;
 
 // Functions
-
+BOOL registryVerifier();
+BOOL registryCreater();
 
 #endif // !SERVER_H
