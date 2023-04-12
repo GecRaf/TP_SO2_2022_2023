@@ -1,16 +1,10 @@
-﻿  server.c
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(6,11): warning C4129: '/': unrecognized character escape sequence
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(7,11): warning C4129: '_': unrecognized character escape sequence
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(22,31): warning C4047: '==': 'int' differs in levels of indirection from 'void *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(30,43): warning C4047: 'function': 'const wchar_t *' differs in levels of indirection from 'TCHAR'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(30,27): warning C4024: 'wcscpy_s': different types for formal and actual parameter 3
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(66,12): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(89,14): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(95,13): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(116,11): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(122,24): warning C4133: '=': incompatible types - from 'ControlData *' to 'LPCTSTR'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(130,12): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(153,21): warning C4047: 'function': 'TCHAR' differs in levels of indirection from 'void *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(153,17): warning C4024: 'server_manager': different types for formal and actual parameter 1
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(158,10): warning C4098: 'init_server': 'void' function returning a value
-  Servidor.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
+﻿  registry.c
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(47,13): warning C4013: 'RegistryCreate' indefinido; assumindo extern retornando int
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(20,11): warning C4101: 'resultado': variável local não referenciada
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(98,49): warning C4133: 'função': tipos incompatíveis - de 'DWORD *' para 'LPCWSTR'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(110,67): warning C4047: 'função': 'LPCWSTR' difere em níveis de indireção de 'unsigned long'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(110,58): warning C4024: 'RegSetValueW': tipos diferentes para parâmetro formal e real 4
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(110,88): warning C4047: 'função': 'DWORD' difere em níveis de indireção de 'DWORD *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(110,69): warning C4024: 'RegSetValueW': tipos diferentes para parâmetro formal e real 5
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(110,90): warning C4020: 'RegSetValueW': muitos parâmetros reais
+  Servidor.vcxproj -> C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
