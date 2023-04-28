@@ -84,7 +84,7 @@ void init_server(int argc, TCHAR* argv[]) {
 			// Print values
 			_tprintf(TEXT("\t[Server.c/init_server] Number of lanes: %d\n"), nr_of_lanes);
 			_tprintf(TEXT("\t[Server.c/init_server] Initial speed: %d\n"), init_speed);
-			BOOL result = createRegistry(nr_of_lanes, init_speed);
+			BOOL result = verifyRegistry();
 			if (!result) {
 				_tprintf(TEXT("\t[Server.c/init_server] Error creating registry file!\n"));
 				return -1;
@@ -100,7 +100,7 @@ void init_server(int argc, TCHAR* argv[]) {
 	{
 		_tprintf(TEXT("\t[Server.c/init_server] Values stored in Registry!\n"));
 	}
-
+	
 	// Shared memory 
 	
 	HANDLE hMapFile = CreateFileMapping(

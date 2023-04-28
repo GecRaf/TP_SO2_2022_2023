@@ -1,10 +1,18 @@
 ﻿  registry.c
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(47,13): warning C4013: 'RegistryCreate' indefinido; assumindo extern retornando int
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(20,11): warning C4101: 'resultado': variável local não referenciada
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(98,49): warning C4133: 'função': tipos incompatíveis - de 'DWORD *' para 'LPCWSTR'
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(110,67): warning C4047: 'função': 'LPCWSTR' difere em níveis de indireção de 'unsigned long'
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(110,58): warning C4024: 'RegSetValueW': tipos diferentes para parâmetro formal e real 4
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(110,88): warning C4047: 'função': 'DWORD' difere em níveis de indireção de 'DWORD *'
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(110,69): warning C4024: 'RegSetValueW': tipos diferentes para parâmetro formal e real 5
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(110,90): warning C4020: 'RegSetValueW': muitos parâmetros reais
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(59,22): warning C4133: 'função': tipos incompatíveis - de 'FILE *' para 'const wchar_t *const '
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(72,22): warning C4133: 'função': tipos incompatíveis - de 'FILE *' para 'const wchar_t *const '
+  server.c
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(22,31): warning C4047: '==': 'int' difere em níveis de indireção de 'void *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(30,43): warning C4047: 'função': 'const wchar_t *' difere em níveis de indireção de 'TCHAR'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(30,27): warning C4024: 'wcscpy_s': tipos diferentes para parâmetro formal e real 3
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(66,12): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(90,14): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(96,13): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(117,11): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(123,24): warning C4133: '=': tipos incompatíveis - de 'ControlData *' para 'LPCTSTR'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(131,12): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(154,21): warning C4047: 'função': 'TCHAR' difere em níveis de indireção de 'void *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(154,17): warning C4024: 'server_manager': tipos diferentes para parâmetro formal e real 1
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(159,10): warning C4098: 'init_server': função 'void' retornando um valor
+  Gerando Código...
   Servidor.vcxproj -> C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe

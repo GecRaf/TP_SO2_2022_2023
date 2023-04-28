@@ -59,7 +59,6 @@ typedef struct {
 } ControlData;
 
 // Functions
-BOOL verifyRegistry();
-BOOL createRegistry(DWORD* roadLanes, DWORD* carspeed);
+int verifyRegistry();
 
 #endif // !SERVER_H
