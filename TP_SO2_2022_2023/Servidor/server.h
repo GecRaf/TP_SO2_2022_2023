@@ -21,7 +21,7 @@
 #define MAX_GAME_TIME 10000
 #define DEFAULT_GAME_TIME 60
 
-#define KEY_PATH TEXT("Software\\TP_SO2_2122")
+#define KEY_PATH TEXT("Software\\TP_SO2_2223\\")
 #define KEY_ROAD_LANES TEXT("RoadLanes")
 #define KEY_INIT_SPEED TEXT("InitialSpeed")
 
@@ -48,8 +48,8 @@ typedef struct {
 	TCHAR board[MAX_BOARD_ROW][MAX_BOARD_COL];
 	int game_time;
 	int number_of_frogs;
-	Lanes l[MAX_ROAD_LANES];
-	Frogs f[MAX_FROGS];
+	Lanes* l;
+	Frogs* f[MAX_FROGS];
 	int points;
 } Game;
 
@@ -60,5 +60,6 @@ typedef struct {
 
 // Functions
 int verifyRegistry();
+int createRegistry();
 
 #endif // !SERVER_H

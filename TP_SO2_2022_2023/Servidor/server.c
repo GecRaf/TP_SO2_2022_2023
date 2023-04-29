@@ -16,6 +16,7 @@ void clear_screen() {
 }
 
 char server_manager(TCHAR command_received) {
+	clear_screen();
 	TCHAR command[50];
 	ascii_printer();
 	while (1) {
@@ -50,6 +51,7 @@ void init_server(int argc, TCHAR* argv[]) {
 	// Initialize structs
 	ControlData cd;
 	Game* game = (Game*)malloc(sizeof(Game));
+	
 	cd.g = game;
 	
 	// Server instance controller
@@ -71,24 +73,26 @@ void init_server(int argc, TCHAR* argv[]) {
 	// Verify if there is a registry file already
 	BOOL result = verifyRegistry();
 	
-	if (!result)
+	if (result == -1)
 	{
 		_tprintf(TEXT("[Server.c/init_server] No values stored in Registry!\n"));
 		// Ask for number of lanes and initial speed to the user
 		int nr_of_lanes = 0;
 		int init_speed = 0;
-		
+
 		if (argc == 3) {
 			nr_of_lanes = _ttoi(argv[1]);
 			init_speed = _ttoi(argv[2]);
 			// Print values
-			_tprintf(TEXT("\t[Server.c/init_server] Number of lanes: %d\n"), nr_of_lanes);
-			_tprintf(TEXT("\t[Server.c/init_server] Initial speed: %d\n"), init_speed);
-			BOOL result = verifyRegistry();
-			if (!result) {
+			_tprintf(TEXT("[Server.c/init_server] Number of lanes: %d\n"), nr_of_lanes);
+			_tprintf(TEXT("[Server.c/init_server] Initial speed: %d\n"), init_speed);
+			BOOL result = createRegistry(nr_of_lanes, init_speed);
+			if (result == -1) {
 				_tprintf(TEXT("\t[Server.c/init_server] Error creating registry file!\n"));
 				return -1;
 			}
+			//Lanes* lanes = (Lanes*)malloc(sizeof(Lanes) * nr_of_lanes);
+			// game->l = lanes; //To be reviewed and thought...
 		}
 		else
 		{
@@ -98,7 +102,32 @@ void init_server(int argc, TCHAR* argv[]) {
 	}
 	else
 	{
-		_tprintf(TEXT("\t[Server.c/init_server] Values stored in Registry!\n"));
+		_tprintf(TEXT("[Server.c/init_server] Values stored in Registry!\n"));
+		// Read values from registry
+		int nr_of_lanes = 0;
+		int init_speed = 0;
+		BOOL result = readRegistry(KEY_ROAD_LANES);
+		if (result == -1) {
+			_tprintf(TEXT("\t[Server.c/init_server] Error reading registry file!\n"));
+			return -1;
+		}
+		else {
+			nr_of_lanes = result;
+		}
+
+		result = readRegistry(KEY_INIT_SPEED);
+		if (result == -1) {
+			_tprintf(TEXT("\t[Server.c/init_server] Error reading registry file!\n"));
+			return -1;
+		}
+		else {
+			init_speed = result;
+		}
+		// Print values
+		_tprintf(TEXT("\t[Server.c/init_server] Number of lanes: %d\n"), nr_of_lanes);
+		_tprintf(TEXT("\t[Server.c/init_server] Initial speed: %d\n"), init_speed);
+		//Lanes* lanes = (Lanes*)malloc(sizeof(Lanes) * nr_of_lanes);
+		// game->l = lanes; //To be reviewed and thought...
 	}
 	
 	// Shared memory 
@@ -134,7 +163,7 @@ void init_server(int argc, TCHAR* argv[]) {
 
 	// Create a thread to manage the server
 
-	HANDLE hThread = CreateThread(
+	/*HANDLE hThread = CreateThread(
 		NULL,
 		0,
 		(LPTHREAD_START_ROUTINE)server_manager,
@@ -147,12 +176,13 @@ void init_server(int argc, TCHAR* argv[]) {
 	{
 		_tprintf(TEXT("[Server.c/init_server] Error creating server manager thread\n"));
 		return;
-	}
+	}*/
 
 	_tprintf(TEXT("[Server.c/init_server] Server manager thread created successfully\n"));
 
+	Sleep(3000);
+
 	server_manager(NULL);
-	
 
 	UnmapViewOfFile(cd.shared_memmory_ptr);
 	
@@ -168,7 +198,6 @@ int _tmain(int argc, TCHAR* argv[]) {
 	#endif // UNICODE
 	
 	init_server(argc, argv);
-		
 	
 	return 0;
 }
