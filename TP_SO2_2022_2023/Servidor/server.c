@@ -11,6 +11,22 @@ void ascii_printer() {
 	
 }
 
+void boardInitializer() {
+
+	for (int i = 0; i < MAX_BOARD_ROW; i++) {
+		_tprintf(TEXT("\n"));
+		for (int j = 0; j < MAX_BOARD_COL; j++) {
+			if (i == 0 || i == MAX_BOARD_ROW - 1) {
+				_tprintf(TEXT("-"));
+			}else{
+			_tprintf(TEXT(".")); 
+			}
+
+		}
+	}
+	_tprintf(TEXT("\n"));
+}
+
 void clear_screen() {
 	system("cls");
 }
@@ -19,6 +35,8 @@ char server_manager(TCHAR command_received) {
 	clear_screen();
 	TCHAR command[50];
 	ascii_printer();
+	boardInitializer();
+
 	while (1) {
 		if (command_received == NULL) {
 			_tprintf(TEXT("\t[*] Enter a command: "));
@@ -130,6 +148,7 @@ void init_server(int argc, TCHAR* argv[]) {
 		// game->l = lanes; //To be reviewed and thought...
 	}
 	
+
 	// Shared memory 
 	
 	HANDLE hMapFile = CreateFileMapping(
@@ -198,6 +217,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 	#endif // UNICODE
 	
 	init_server(argc, argv);
+	
 	
 	return 0;
 }
