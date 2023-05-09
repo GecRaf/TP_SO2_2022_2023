@@ -1,4 +1,6 @@
-#include "server.h"
+﻿#include "server.h"
+
+//▬ᴥ
 
 void ascii_printer() {
 	_tprintf(TEXT("\t   ____                          \n"));
@@ -51,8 +53,9 @@ void init_server(int argc, TCHAR* argv[]) {
 	// Initialize structs
 	ControlData cd;
 	Game* game = (Game*)malloc(sizeof(Game));
-	
 	cd.g = game;
+	int nr_of_lanes = 0;
+	int init_speed = 0;
 	
 	// Server instance controller
 
@@ -91,8 +94,6 @@ void init_server(int argc, TCHAR* argv[]) {
 				_tprintf(TEXT("\t[Server.c/init_server] Error creating registry file!\n"));
 				return -1;
 			}
-			//Lanes* lanes = (Lanes*)malloc(sizeof(Lanes) * nr_of_lanes);
-			// game->l = lanes; //To be reviewed and thought...
 		}
 		else
 		{
@@ -104,8 +105,6 @@ void init_server(int argc, TCHAR* argv[]) {
 	{
 		_tprintf(TEXT("[Server.c/init_server] Values stored in Registry!\n"));
 		// Read values from registry
-		int nr_of_lanes = 0;
-		int init_speed = 0;
 		BOOL result = readRegistry(KEY_ROAD_LANES);
 		if (result == -1) {
 			_tprintf(TEXT("\t[Server.c/init_server] Error reading registry file!\n"));
@@ -126,8 +125,8 @@ void init_server(int argc, TCHAR* argv[]) {
 		// Print values
 		_tprintf(TEXT("\t[Server.c/init_server] Number of lanes: %d\n"), nr_of_lanes);
 		_tprintf(TEXT("\t[Server.c/init_server] Initial speed: %d\n"), init_speed);
-		//Lanes* lanes = (Lanes*)malloc(sizeof(Lanes) * nr_of_lanes);
-		// game->l = lanes; //To be reviewed and thought...
+		cd.g->number_of_lanes = nr_of_lanes;
+		cd.g->initial_speed = init_speed;
 	}
 	
 	// Shared memory 
@@ -137,8 +136,8 @@ void init_server(int argc, TCHAR* argv[]) {
 		NULL,                    // default security
 		PAGE_READWRITE,          // read/write access
 		0,                       // maximum object size (high-order DWORD)
-		sizeof(ControlData),                // maximum object size (low-order DWORD)
-		TEXT("SharedMemory"));                 // name of mapping object
+		sizeof(ControlData),     // maximum object size (low-order DWORD)
+		TEXT("SharedMemory"));   // name of mapping object
 
 	if (hMapFile == NULL)
 	{
@@ -161,7 +160,15 @@ void init_server(int argc, TCHAR* argv[]) {
 	}
 	_tprintf(TEXT("[Server.c/init_server] Shared memory pointer created successfully\n"));
 
+	// Initialize shared memory
+	cd.g = game;
+	cd.g->in = 0;
+	cd.g->out = 0;
+	cd.threadStop = 0;
+
+
 	// Create a thread to manage the server
+	// Lots of threads going on, one for acceptiing clients, others for managing the clients and messages
 
 	/*HANDLE hThread = CreateThread(
 		NULL,
@@ -180,15 +187,17 @@ void init_server(int argc, TCHAR* argv[]) {
 
 	_tprintf(TEXT("[Server.c/init_server] Server manager thread created successfully\n"));
 
-	Sleep(3000);
+	// Somewhere overhere, we goota initialize the game board
 
 	server_manager(NULL);
 
+	// Wait for the threads to finish with WaitForSingleObject
 	UnmapViewOfFile(cd.shared_memmory_ptr);
-	
+	CloseHandle(hMapFile);
+	CloseHandle(hSemaphoreServer);
+
 	return 0;
 }
-
 
 int _tmain(int argc, TCHAR* argv[]) {
 	#ifdef UNICODE

@@ -20,15 +20,17 @@
 #define MAX_BOARD_ROW 10
 #define MAX_GAME_TIME 10000
 #define DEFAULT_GAME_TIME 60
+#define MAX_BUFFER_SIZE 100
 
 #define KEY_PATH TEXT("Software\\TP_SO2_2223\\")
 #define KEY_ROAD_LANES TEXT("RoadLanes")
 #define KEY_INIT_SPEED TEXT("InitialSpeed")
 
-
-
-
 // Structs
+
+typedef struct {
+	TCHAR command[100]
+} BufferItem;
 
 typedef struct {
 	int direction;
@@ -48,18 +50,31 @@ typedef struct {
 	TCHAR board[MAX_BOARD_ROW][MAX_BOARD_COL];
 	int game_time;
 	int number_of_frogs;
-	Lanes* l;
+	int number_of_lanes;
+	int initial_speed;
+	Lanes* l[MAX_ROAD_LANES];
 	Frogs* f[MAX_FROGS];
-	int points;
+	
+	BufferItem buffer[MAX_BUFFER_SIZE];
+	HANDLE mutexSemaphore;
+	HANDLE emptySemaphore;
+	HANDLE fullSemaphore;
+	DWORD in, out;
 } Game;
 
 typedef struct {
 	Game* g;
 	LPCTSTR shared_memmory_ptr;
+	HANDLE hSemWrite;
+	HANDLE hSemRead;
+	HANDLE hMutex;
+	HANDLE eventHandle;
+	DWORD threadStop;
 } ControlData;
 
 // Functions
 int verifyRegistry();
-int createRegistry();
+int createRegistry(int roadLanes, int carSpeed);
+int readRegistry(char type[]);
 
 #endif // !SERVER_H
