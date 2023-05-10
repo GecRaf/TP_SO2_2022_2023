@@ -13,18 +13,28 @@ void ascii_printer() {
 	
 }
 
-void boardInitializer() {
-	for (int i = 0; i < MAX_BOARD_ROW; i++) {
+void printBoard(Game* game) {
+	for (int i = 0; i < game->number_of_lanes; i++) {
 		_tprintf(TEXT("\n"));
 		for (int j = 0; j < MAX_BOARD_COL; j++) {
-			if (i == 0 || i == MAX_BOARD_ROW - 1) {
-				_tprintf(TEXT("-"));
-			}else{
-			_tprintf(TEXT(".")); 
-			}
+			_tprintf(TEXT("%c"),game->board[i][j]);
 		}
 	}
 	_tprintf(TEXT("\n"));
+}
+
+void boardInitializer(Game* game) {
+	
+	for (int i = 0; i < game->number_of_lanes; i++) {
+		for (int j = 0; j < MAX_BOARD_COL; j++) {
+			if (i == 0 || i == game->number_of_lanes - 1) {
+				game->board[i][j] = '-';
+			}
+			else {
+				game->board[i][j] = '.';
+			}
+		}
+	}
 }
 
 void clear_screen() {
@@ -33,11 +43,12 @@ void clear_screen() {
 
 DWORD WINAPI server_manager(LPVOID lparam) {
 	ControlData *cd = (ControlData*)lparam;
-	clear_screen();
 	TCHAR command[50][50];
-	ascii_printer();
-	//boardInitializer();
 	TCHAR command_received[100];
+	clear_screen();
+	ascii_printer();
+	boardInitializer(cd->g);
+	printBoard(cd->g);
 
 	while (1) {
 		WaitForSingleObject(cd->hSemRead, INFINITE);
