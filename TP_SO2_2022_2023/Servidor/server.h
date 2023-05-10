@@ -20,7 +20,7 @@
 #define MAX_BOARD_ROW 10
 #define MAX_GAME_TIME 10000
 #define DEFAULT_GAME_TIME 60
-#define MAX_BUFFER_SIZE 100
+#define MAX_BUFFER_SIZE 10
 
 #define KEY_PATH TEXT("Software\\TP_SO2_2223\\")
 #define KEY_ROAD_LANES TEXT("RoadLanes")
@@ -29,7 +29,7 @@
 // Structs
 
 typedef struct {
-	TCHAR command[100]
+	TCHAR command[100];
 } BufferItem;
 
 typedef struct {
@@ -52,8 +52,8 @@ typedef struct {
 	int number_of_frogs;
 	int number_of_lanes;
 	int initial_speed;
-	Lanes* l[MAX_ROAD_LANES];
-	Frogs* f[MAX_FROGS];
+	Lanes l[MAX_ROAD_LANES];
+	Frogs f[MAX_FROGS];
 	
 	BufferItem buffer[MAX_BUFFER_SIZE];
 	HANDLE mutexSemaphore;
@@ -68,8 +68,8 @@ typedef struct {
 	HANDLE hSemWrite;
 	HANDLE hSemRead;
 	HANDLE hMutex;
-	HANDLE eventHandle;
 	DWORD threadStop;
+	HANDLE eventHandle;
 } ControlData;
 
 // Functions

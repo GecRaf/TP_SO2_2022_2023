@@ -14,7 +14,6 @@ void ascii_printer() {
 }
 
 void boardInitializer() {
-
 	for (int i = 0; i < MAX_BOARD_ROW; i++) {
 		_tprintf(TEXT("\n"));
 		for (int j = 0; j < MAX_BOARD_COL; j++) {
@@ -23,7 +22,6 @@ void boardInitializer() {
 			}else{
 			_tprintf(TEXT(".")); 
 			}
-
 		}
 	}
 	_tprintf(TEXT("\n"));
@@ -33,23 +31,32 @@ void clear_screen() {
 	system("cls");
 }
 
-char server_manager(TCHAR command_received) {
+DWORD WINAPI server_manager(LPVOID lparam) {
+	ControlData *cd = (ControlData*)lparam;
 	clear_screen();
-	TCHAR command[50];
+	TCHAR command[50][50];
 	ascii_printer();
-	boardInitializer();
+	//boardInitializer();
+	TCHAR command_received[100];
 
 	while (1) {
+		WaitForSingleObject(cd->hSemRead, INFINITE);
+		WaitForSingleObject(cd->hMutex, INFINITE);
+		CopyMemory(&command_received, &cd->g->buffer[cd->g->out], sizeof(cd->g->buffer));
+		cd->g->out++;
+		if(cd->g->out == MAX_BUFFER_SIZE) cd-> g->out = 0;
+
 		if (command_received == NULL) {
 			_tprintf(TEXT("\t[*] Enter a command: "));
 			_fgetts(command, 50, stdin);
-			command[_tcslen(command) - 1] = '\0';
+			//command[_tcslen(command) - 1] = '\0';
 			_tprintf(TEXT("\n"));
 		}
 		else
 		{
 			_tcscpy_s(command, 50, command_received);
 		}
+		//SetEvent(cd->eventHandle);
 
 		if (_tcscmp(command, TEXT("exit")) == 0) {
 			_tprintf(TEXT("\t[!] Server shutting down...\n"));
@@ -63,6 +70,9 @@ char server_manager(TCHAR command_received) {
 			clear_screen();
 			ascii_printer();
 		}
+
+		ReleaseMutex(cd->hMutex);
+		ReleaseSemaphore(cd->hSemRead, 1, NULL);
 	}
 	return 0;
 }
@@ -184,16 +194,17 @@ void init_server(int argc, TCHAR* argv[]) {
 	cd.g->in = 0;
 	cd.g->out = 0;
 	cd.threadStop = 0;
-
+	cd.hMutex = CreateSemaphore(NULL, 1, 1, TEXT("SemMutex"));
+	cd.eventHandle = CreateEvent(NULL, TRUE, FALSE, TEXT("BoardEvent"));
 
 	// Create a thread to manage the server
 	// Lots of threads going on, one for acceptiing clients, others for managing the clients and messages
 
-	/*HANDLE hThread = CreateThread(
+	HANDLE hThread = CreateThread(
 		NULL,
 		0,
 		(LPTHREAD_START_ROUTINE)server_manager,
-		NULL,
+		&cd,
 		0,
 		NULL
 	);
@@ -202,19 +213,20 @@ void init_server(int argc, TCHAR* argv[]) {
 	{
 		_tprintf(TEXT("[Server.c/init_server] Error creating server manager thread\n"));
 		return;
-	}*/
+	}
 
 	_tprintf(TEXT("[Server.c/init_server] Server manager thread created successfully\n"));
 
+	WaitForSingleObject(hThread, INFINITE);
 	// Somewhere overhere, we goota initialize the game board
 
-	server_manager(NULL);
+	//server_manager(NULL);
 
 	// Wait for the threads to finish with WaitForSingleObject
 	UnmapViewOfFile(cd.shared_memmory_ptr);
 	CloseHandle(hMapFile);
 	CloseHandle(hSemaphoreServer);
-
+	CloseHandle(cd.eventHandle);
 	return 0;
 }
 
@@ -226,7 +238,6 @@ int _tmain(int argc, TCHAR* argv[]) {
 	#endif // UNICODE
 	
 	init_server(argc, argv);
-	
 	
 	return 0;
 }
