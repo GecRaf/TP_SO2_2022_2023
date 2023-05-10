@@ -1,27 +1,18 @@
-﻿  registry.c
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(137,22): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'const char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(137,59): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'const char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(141,27): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'const char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(166,27): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'const char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(144,15): warning C4101: 'resultado': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(169,9): warning C4101: 'resultado': unreferenced local variable
-  server.c
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(23,31): warning C4047: '==': 'int' differs in levels of indirection from 'void *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(31,43): warning C4047: 'function': 'const wchar_t *' differs in levels of indirection from 'TCHAR'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(31,27): warning C4024: 'wcscpy_s': different types for formal and actual parameter 3
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(68,12): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(92,14): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(98,13): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(107,30): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(110,13): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(116,25): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(119,13): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(142,11): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(148,24): warning C4133: '=': incompatible types - from 'ControlData *' to 'LPCTSTR'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(156,12): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(181,21): warning C4047: 'function': 'TCHAR' differs in levels of indirection from 'void *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(181,17): warning C4024: 'server_manager': different types for formal and actual parameter 1
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(185,10): warning C4098: 'init_server': 'void' function returning a value
-  Generating Code...
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(191): warning C4715: 'readRegistry': not all control paths return a value
-  Servidor.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
+﻿  server.c
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(50,31): warning C4047: '==': 'int' difere em níveis de indireção de 'void *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(58,43): warning C4047: 'função': 'const wchar_t *' difere em níveis de indireção de 'TCHAR'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(58,27): warning C4024: 'wcscpy_s': tipos diferentes para parâmetro formal e real 3
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(96,12): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(120,14): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(126,13): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(133,30): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [10]' para 'char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(136,13): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(142,25): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [13]' para 'char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(145,13): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(171,11): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(177,24): warning C4133: '=': tipos incompatíveis - de 'ControlData *' para 'LPCTSTR'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(185,12): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(218,21): warning C4047: 'função': 'TCHAR' difere em níveis de indireção de 'void *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(218,17): warning C4024: 'server_manager': tipos diferentes para parâmetro formal e real 1
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(225,10): warning C4098: 'init_server': função 'void' retornando um valor
+  Servidor.vcxproj -> C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe

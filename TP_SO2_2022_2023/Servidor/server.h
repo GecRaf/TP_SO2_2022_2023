@@ -29,7 +29,7 @@
 // Structs
 
 typedef struct {
-	TCHAR command[100]
+	TCHAR command[100];
 } BufferItem;
 
 typedef struct {

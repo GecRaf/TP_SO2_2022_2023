@@ -12,32 +12,39 @@ void ascii_printer() {
 	_tprintf(TEXT("\n"));
 	
 }
-
-void boardInitializer() {
-
-	for (int i = 0; i < MAX_BOARD_ROW; i++) {
+void printBoard(Game* game) {
+	for (int i = 0; i < game->number_of_lanes; i++) {
 		_tprintf(TEXT("\n"));
 		for (int j = 0; j < MAX_BOARD_COL; j++) {
-			if (i == 0 || i == MAX_BOARD_ROW - 1) {
-				_tprintf(TEXT("-"));
-			}else{
-			_tprintf(TEXT(".")); 
-			}
-
+			_tprintf(TEXT("%c"),game->board[i][j]);
 		}
 	}
 	_tprintf(TEXT("\n"));
+}
+void boardInitializer(Game* game) {
+	
+	for (int i = 0; i < game->number_of_lanes; i++) {
+		for (int j = 0; j < MAX_BOARD_COL; j++) {
+			if (i == 0 || i == game->number_of_lanes - 1) {
+				game->board[i][j] = '-';
+			}
+			else {
+				game->board[i][j] = '.';
+			}
+		}
+	}
 }
 
 void clear_screen() {
 	system("cls");
 }
 
-char server_manager(TCHAR command_received) {
+char server_manager(TCHAR command_received,Game* game) {
 	clear_screen();
 	TCHAR command[50];
 	ascii_printer();
-	boardInitializer();
+	boardInitializer(game);
+	printBoard(game);
 
 	while (1) {
 		if (command_received == NULL) {
@@ -208,7 +215,7 @@ void init_server(int argc, TCHAR* argv[]) {
 
 	// Somewhere overhere, we goota initialize the game board
 
-	server_manager(NULL);
+	server_manager(NULL,game);
 
 	// Wait for the threads to finish with WaitForSingleObject
 	UnmapViewOfFile(cd.shared_memmory_ptr);
