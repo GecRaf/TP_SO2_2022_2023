@@ -25,6 +25,7 @@
 #define KEY_PATH TEXT("Software\\TP_SO2_2223\\")
 #define KEY_ROAD_LANES TEXT("RoadLanes")
 #define KEY_INIT_SPEED TEXT("InitialSpeed")
+#define KEY_SHARED_MEMORY TEXT("SharedMemory")
 
 // Structs
 

@@ -1,2 +1,4 @@
 ﻿  operator.c
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(29,17): warning C4047: 'function': 'ControlData *' differs in levels of indirection from 'ControlData **'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(29,14): warning C4024: 'printBoard': different types for formal and actual parameter 1
   Operador.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Operator.exe

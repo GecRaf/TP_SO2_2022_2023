@@ -23,15 +23,14 @@ void printBoard(Game* game) {
 	_tprintf(TEXT("\n"));
 }
 
-void boardInitializer(Game* game) {
-	
-	for (int i = 0; i < game->number_of_lanes; i++) {
+void boardInitializer(ControlData* cd) {
+	for (int i = 0; i < cd->g->number_of_lanes; i++) {
 		for (int j = 0; j < MAX_BOARD_COL; j++) {
-			if (i == 0 || i == game->number_of_lanes - 1) {
-				game->board[i][j] = '-';
+			if (i == 0 || i == cd->g->number_of_lanes - 1) {
+				cd->g->board[i][j] = TEXT('-');
 			}
 			else {
-				game->board[i][j] = '.';
+				cd->g->board[i][j] = TEXT('.');
 			}
 		}
 	}
@@ -41,23 +40,8 @@ void clear_screen() {
 	system("cls");
 }
 
-DWORD WINAPI server_manager(LPVOID lparam) {
-	ControlData *cd = (ControlData*)lparam;
-	TCHAR command[50][50];
-	TCHAR command_received[100];
-	clear_screen();
-	ascii_printer();
-	boardInitializer(cd->g);
-	printBoard(cd->g);
-
-	while (1) {
-		WaitForSingleObject(cd->hSemRead, INFINITE);
-		WaitForSingleObject(cd->hMutex, INFINITE);
-		CopyMemory(&command_received, &cd->g->buffer[cd->g->out], sizeof(cd->g->buffer));
-		cd->g->out++;
-		if(cd->g->out == MAX_BUFFER_SIZE) cd-> g->out = 0;
-
-		if (command_received == NULL) {
+// TODO: Rafael (Console function) 
+/*if (command_received == NULL) {
 			_tprintf(TEXT("\t[*] Enter a command: "));
 			_fgetts(command, 50, stdin);
 			//command[_tcslen(command) - 1] = '\0';
@@ -67,7 +51,6 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 		{
 			_tcscpy_s(command, 50, command_received);
 		}
-		//SetEvent(cd->eventHandle);
 
 		if (_tcscmp(command, TEXT("exit")) == 0) {
 			_tprintf(TEXT("\t[!] Server shutting down...\n"));
@@ -80,7 +63,38 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 			Sleep(1000);
 			clear_screen();
 			ascii_printer();
-		}
+		}*/
+
+DWORD WINAPI server_manager(LPVOID lparam) {
+	ControlData* cd = (ControlData*)lparam;
+	TCHAR command[50][50];
+	BufferItem buffer_item;
+	clear_screen();
+	ascii_printer();
+	printBoard(cd->g);
+
+	while (!cd->threadStop) {
+		_tprintf(TEXT("\t[*] 3...\n"));
+		Sleep(1000);
+		_tprintf(TEXT("\t[*] 2...\n"));
+		Sleep(1000);
+		_tprintf(TEXT("\t[*] 1...\n"));
+		Sleep(1000);
+		_tprintf(TEXT("\t[*] GO!\n"));
+		SetEvent(cd->eventHandle);
+		_tprintf(TEXT("\t[*] Signal sent!\n"));
+		WaitForSingleObject(cd->hSemRead, INFINITE);
+		WaitForSingleObject(cd->hMutex, INFINITE);
+		CopyMemory(&buffer_item, &cd->g->buffer[cd->g->out], sizeof(BufferItem));
+		cd->g->out++;
+		if(cd->g->out == MAX_BUFFER_SIZE) cd->g->out = 0;
+
+		_tprintf(TEXT("\t[*] Command received: %s\n"), buffer_item.command);
+
+		//TODO: Rafaela (Command check)
+		// stop
+		// obstacle
+		// invert
 
 		ReleaseMutex(cd->hMutex);
 		ReleaseSemaphore(cd->hSemRead, 1, NULL);
@@ -92,7 +106,6 @@ void init_server(int argc, TCHAR* argv[]) {
 	// Initialize structs
 	ControlData cd;
 	Game* game = (Game*)malloc(sizeof(Game));
-	cd.g = game;
 	int nr_of_lanes = 0;
 	int init_speed = 0;
 	
@@ -119,8 +132,6 @@ void init_server(int argc, TCHAR* argv[]) {
 	{
 		_tprintf(TEXT("[Server.c/init_server] No values stored in Registry!\n"));
 		// Ask for number of lanes and initial speed to the user
-		int nr_of_lanes = 0;
-		int init_speed = 0;
 
 		if (argc == 3) {
 			nr_of_lanes = _ttoi(argv[1]);
@@ -164,8 +175,6 @@ void init_server(int argc, TCHAR* argv[]) {
 		// Print values
 		_tprintf(TEXT("\t[Server.c/init_server] Number of lanes: %d\n"), nr_of_lanes);
 		_tprintf(TEXT("\t[Server.c/init_server] Initial speed: %d\n"), init_speed);
-		cd.g->number_of_lanes = nr_of_lanes;
-		cd.g->initial_speed = init_speed;
 	}
 	
 
@@ -176,8 +185,8 @@ void init_server(int argc, TCHAR* argv[]) {
 		NULL,                    // default security
 		PAGE_READWRITE,          // read/write access
 		0,                       // maximum object size (high-order DWORD)
-		sizeof(ControlData),     // maximum object size (low-order DWORD)
-		TEXT("SharedMemory"));   // name of mapping object
+		sizeof(Game),     // maximum object size (low-order DWORD)
+		KEY_SHARED_MEMORY);   // name of mapping object
 
 	if (hMapFile == NULL)
 	{
@@ -188,33 +197,38 @@ void init_server(int argc, TCHAR* argv[]) {
 	_tprintf(TEXT("[Server.c/init_server] Shared memory created successfully\n"));
 
 	// Create pointer for Shared Memory
-	cd.shared_memmory_ptr = (ControlData*)MapViewOfFile(hMapFile,   // handle to map object
+	cd.g = (Game*)MapViewOfFile(hMapFile,   // handle to map object
 		FILE_MAP_ALL_ACCESS, // read/write permission
 		0,
 		0,
-		sizeof(ControlData));
+		sizeof(Game));
 	
-	if (cd.shared_memmory_ptr == NULL || cd.shared_memmory_ptr == INVALID_HANDLE_VALUE){
+	if (cd.g == NULL || cd.g == INVALID_HANDLE_VALUE){
 			_tprintf(TEXT("[Server.c/init_server] Error creating shared memory pointer\n"));
 			return 1;
 	}
 	_tprintf(TEXT("[Server.c/init_server] Shared memory pointer created successfully\n"));
 
 	// Initialize shared memory
-	cd.g = game;
+	cd.g->number_of_lanes = nr_of_lanes;
+	cd.g->initial_speed = init_speed;
 	cd.g->in = 0;
 	cd.g->out = 0;
 	cd.threadStop = 0;
-	cd.hMutex = CreateSemaphore(NULL, 1, 1, TEXT("SemMutex"));
+	cd.hSemRead = CreateSemaphore(NULL, 0, MAX_BUFFER_SIZE, TEXT("SemRead"));
+	cd.hSemWrite = CreateSemaphore(NULL, MAX_BUFFER_SIZE, MAX_BUFFER_SIZE, TEXT("SemWrite"));
+	cd.hMutex = CreateMutex(NULL, FALSE, TEXT("SemMutex"));
 	cd.eventHandle = CreateEvent(NULL, TRUE, FALSE, TEXT("BoardEvent"));
+
+	boardInitializer(&cd);
 
 	// Create a thread to manage the server
 	// Lots of threads going on, one for acceptiing clients, others for managing the clients and messages
-
+	Sleep(3000);
 	HANDLE hThread = CreateThread(
 		NULL,
 		0,
-		(LPTHREAD_START_ROUTINE)server_manager,
+		server_manager,
 		&cd,
 		0,
 		NULL
@@ -229,9 +243,6 @@ void init_server(int argc, TCHAR* argv[]) {
 	_tprintf(TEXT("[Server.c/init_server] Server manager thread created successfully\n"));
 
 	WaitForSingleObject(hThread, INFINITE);
-	// Somewhere overhere, we goota initialize the game board
-
-	//server_manager(NULL);
 
 	// Wait for the threads to finish with WaitForSingleObject
 	UnmapViewOfFile(cd.shared_memmory_ptr);

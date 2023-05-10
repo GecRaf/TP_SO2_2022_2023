@@ -1,11 +1,33 @@
 #include "operator.h"
 
+void printBoard(ControlData* cd) {
+	_tprintf(TEXT("oi3\n"));
+	for (int i = 0; i < cd->g->number_of_lanes; i++) {
+		_tprintf(TEXT("\n"));
+		for (int j = 0; j < MAX_BOARD_COL; j++) {
+			_tprintf(TEXT("%c"), cd->g->board[i][j]);
+		}
+	}
+	_tprintf(TEXT("\n"));
+}
+
 DWORD WINAPI threadFunc(LPVOID params) {
 	ControlData *cd = (ControlData*) params;
 	while (1) {
 		WaitForSingleObject(cd->eventHandle, INFINITE);
+		Sleep(1000);
+		_tprintf(TEXT("\t[*] 3...\n"));
+		Sleep(1000);
+		_tprintf(TEXT("\t[*] 2...\n"));
+		Sleep(1000);
+		_tprintf(TEXT("\t[*] 1...\n"));
+		Sleep(1000);
+		_tprintf(TEXT("\t[*] Signal received!\n"));
 		// Zum zum, faz cenas
 		_tprintf(TEXT("Olá, o Tomás ajudou aqui, ou melhor? Em todo o trabalho LOOOOL"));
+		_tprintf(TEXT("oi1\n"));
+		printBoard(&cd);
+		_tprintf(TEXT("oi2\n"));
 		ResetEvent(cd->eventHandle);
 	}
 }
@@ -26,7 +48,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 	HANDLE hMapFile = OpenFileMapping(
 		FILE_MAP_ALL_ACCESS,
 		FALSE,
-		TEXT("SharedMemory")
+		KEY_SHARED_MEMORY
 	);
 	if (hMapFile == NULL || hMapFile == INVALID_HANDLE_VALUE) {
 		_tprintf(TEXT("[Operator.c/_tmain] Error opening shared memory\n"));
@@ -37,7 +59,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 		FILE_MAP_ALL_ACCESS,
 		0,
 		0,
-		sizeof(Game)
+		0
 	);
 	if (cd.g == NULL || cd.g == INVALID_HANDLE_VALUE) {
 		_tprintf(TEXT("[Operator.c/_tmain] Error creating shared memory pointer\n"));
@@ -45,6 +67,8 @@ int _tmain(int argc, TCHAR* argv[]) {
 	}
 
 	// Create function to display the board
+	printBoard(&cd);
+	_tprintf(TEXT("number_of_lanes: %d\tinitial_speed: %d"), cd.g->number_of_lanes, cd.g->initial_speed);
 
 	// Create threads. One for receive commands, another to send commands and another to update the board
 

@@ -1,1 +1,13 @@
-﻿  Servidor.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
+﻿  server.c
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(70,8): warning C4101: 'command': unreferenced local variable
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(123,12): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(145,14): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(151,13): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(158,30): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(161,13): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(167,25): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(170,13): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(194,11): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(208,12): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(252,10): warning C4098: 'init_server': 'void' function returning a value
+  Servidor.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
