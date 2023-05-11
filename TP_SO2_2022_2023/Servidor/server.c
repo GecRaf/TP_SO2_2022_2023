@@ -8,9 +8,8 @@ void ascii_printer() {
 	_tprintf(TEXT("\t / _// __/ _ \\/ _ `/ _ `/ -_) __/\n"));
 	_tprintf(TEXT("\t/_/ /_/  \\___/\\_, /\\_, /\\__/_/   \n"));
 	_tprintf(TEXT("\t             /___//___/          \n"));
-	_tprintf(TEXT("\t[*] SERVER INITIALIZED [*]\n"));
+	_tprintf(TEXT("\t[*] SERVER [*]\n"));
 	_tprintf(TEXT("\n"));
-	
 }
 
 void printBoard(Game* game) {

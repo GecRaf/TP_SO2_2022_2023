@@ -1,7 +1,20 @@
 #include "operator.h"
 
-void printBoard(ControlData* cd) {
-	_tprintf(TEXT("oi3\n"));
+void ascii_printer() {
+	_tprintf(TEXT("\t   ____                          \n"));
+	_tprintf(TEXT("\t  / __/______  ___ ____ ____ ____\n"));
+	_tprintf(TEXT("\t / _// __/ _ \\/ _ `/ _ `/ -_) __/\n"));
+	_tprintf(TEXT("\t/_/ /_/  \\___/\\_, /\\_, /\\__/_/   \n"));
+	_tprintf(TEXT("\t             /___//___/          \n"));
+	_tprintf(TEXT("\t[*] OPERATOR [*]\n"));
+	_tprintf(TEXT("\n"));
+}
+
+void clear_screen() {
+	system("cls");
+}
+
+void print_board(ControlData* cd) {
 	for (int i = 0; i < cd->g->number_of_lanes; i++) {
 		_tprintf(TEXT("\n"));
 		for (int j = 0; j < MAX_BOARD_COL; j++) {
@@ -11,24 +24,148 @@ void printBoard(ControlData* cd) {
 	_tprintf(TEXT("\n"));
 }
 
-DWORD WINAPI threadFunc(LPVOID params) {
-	ControlData *cd = (ControlData*) params;
-	while (1) {
+DWORD WINAPI update_board(LPVOID params) {
+	ControlData* cd = (ControlData*)params;
+	while (!cd->threadStop) {
 		WaitForSingleObject(cd->eventHandle, INFINITE);
-		Sleep(1000);
-		_tprintf(TEXT("\t[*] 3...\n"));
-		Sleep(1000);
-		_tprintf(TEXT("\t[*] 2...\n"));
-		Sleep(1000);
-		_tprintf(TEXT("\t[*] 1...\n"));
-		Sleep(1000);
-		_tprintf(TEXT("\t[*] Signal received!\n"));
-		// Zum zum, faz cenas
-		_tprintf(TEXT("Olá, o Tomás ajudou aqui, ou melhor? Em todo o trabalho LOOOOL"));
-		_tprintf(TEXT("oi1\n"));
-		printBoard(&cd);
-		_tprintf(TEXT("oi2\n"));
+		clear_screen();
+		ascii_printer();
+		print_board(cd);
 		ResetEvent(cd->eventHandle);
+	}
+}
+
+DWORD WINAPI operator_manager(LPVOID params) {
+	ControlData* cd = (ControlData*)params;
+	BufferItem buffer_item;
+	TCHAR command[100];
+	TCHAR command_buffer[100];
+	TCHAR** args;
+
+	while (!cd->threadStop) {
+		_tprintf(TEXT("[Operator.c/sendCommand] Enter a command: "));
+		_fgetts(command, 100, stdin);
+		command[_tcslen(command) - 1] = '\0';
+		_tcscpy_s(command_buffer, 100, command);
+
+		// Check if the command received is an enter
+		if (_tcscmp(command, TEXT("")) == 0) {
+			continue;
+		}
+		
+		args = (TCHAR**)malloc(sizeof(TCHAR*) * 10);
+		int i = 0;
+		TCHAR *next_token = NULL;
+		TCHAR *token = _tcstok_s(command, TEXT(" "), &next_token);
+		while (token != NULL) {
+			args[i] = token;
+			token = _tcstok_s(NULL, TEXT(" "), &next_token);
+			i++;
+		}
+		args[i] = NULL;
+
+		ZeroMemory(buffer_item.command, 100 * sizeof(TCHAR));
+
+		if (!_tcscmp(args[0], TEXT("help")) && i == 1) {
+			_tprintf(TEXT("\t[Operator.c/console] Type 'stop' for the car movement to stop\n"));
+			_tprintf(TEXT("\t[Operator.c/console] Type 'obstacle' to insert an obstacle\n"));
+			_tprintf(TEXT("\t[Operator.c/console] Type 'invert' to invert the direction of travel\n"));
+			_tprintf(TEXT("\t\t[Operator.c/console] Type 'clear' to clear the screen\n"));
+			_tprintf(TEXT("[Operator.c/console] Type 'exit' to stop the operator\n"));
+		}
+		else if (!_tcscmp(args[0], TEXT("stop")) && i == 2) {
+			_tcscpy_s(buffer_item.command, 100, command_buffer);
+			_tprintf(TEXT("\t[Operator.c/console] Stopping car movement for '%d' seconds\n"), _ttoi(args[1]));
+		}
+		else if (!_tcscmp(args[0], TEXT("obstacle")) && i == 3) {
+			if (_ttoi(args[1]) > 0 && _ttoi(args[1]) <= cd->g->number_of_lanes && _ttoi(args[2]) > 0 && _ttoi(args[2]) <= MAX_BOARD_COL) {
+				_tcscpy_s(buffer_item.command, 100, command_buffer);
+				_tprintf(TEXT("\t[Operator.c/console] Inserting obstacle at lane '%d', column '%d'\n"), _ttoi(args[1]), _ttoi(args[2]));
+				SetEvent(cd->eventHandle);
+			}
+			else {
+				_tprintf(TEXT("\t[Operator.c/console] Invalid lane or column\n"));
+			}
+		}
+		else if (!_tcscmp(args[0], TEXT("invert")) && i == 2) {
+			_tcscpy_s(buffer_item.command, 100, command_buffer);
+			_tprintf(TEXT("\t[Operator.c/console] Inverting direction of travel for lane '%d'\n"), _ttoi(args[1]));
+		}
+		else if (!_tcscmp(args[0], TEXT("clear")) && i == 1) {
+			ascii_printer();
+			clear_screen();
+			print_board(&cd);
+		}
+		else if (!_tcscmp(args[0], TEXT("exit")) && i == 1) {
+			_tcscpy_s(buffer_item.command, 100, command_buffer);
+			_tprintf(TEXT("\t[Operator.c/console] Stopping operator\n"));
+			Sleep(1000);
+			break;
+		}else {
+			_tprintf(TEXT("\t[Operator.c/console] Unknown command.\n"));
+			continue;
+		}
+
+		WaitForSingleObject(cd->hSemWrite, INFINITE);
+		WaitForSingleObject(cd->hMutex, INFINITE);
+
+		ZeroMemory(&cd->g->buffer[cd->g->in], sizeof(BufferItem));
+		CopyMemory(&cd->g->buffer[cd->g->in], &buffer_item, sizeof(BufferItem));
+		cd->g->in++;
+
+		if (cd->g->in == MAX_BUFFER_SIZE) cd->g->in = 0;
+
+		ReleaseMutex(cd->hMutex);
+		ReleaseSemaphore(cd->hSemRead, 1, NULL);
+	}
+}
+
+DWORD WINAPI server_command_receiver(LPVOID params) {
+	ControlData* cd = (ControlData*)params;
+	BufferItem buffer_item;
+	TCHAR** args;
+
+	while (!cd->threadStop) {
+		WaitForSingleObject(cd->hSemRead, INFINITE);
+		WaitForSingleObject(cd->hMutex, INFINITE);
+		CopyMemory(&buffer_item, &cd->g->buffer[cd->g->out], sizeof(BufferItem));
+		cd->g->out++;
+
+		if (cd->g->out == MAX_BUFFER_SIZE) cd->g->out = 0;
+
+		ReleaseMutex(cd->hMutex);
+		ReleaseSemaphore(cd->hSemWrite, 1, NULL);
+
+		args = (TCHAR**)malloc(sizeof(TCHAR*) * 10);
+		int i = 0;
+		TCHAR *next_token = NULL;
+		TCHAR *token = _tcstok_s(buffer_item.command, TEXT(" "), &next_token);
+		while (token != NULL) {
+			args[i] = token;
+			token = _tcstok_s(NULL, TEXT(" "), &next_token);
+			i++;
+		}
+		args[i] = NULL;
+
+		if (!_tcscmp(args[0], TEXT("exit")) && i == 1) {
+			_tprintf(TEXT("[Operator.c/receiveCommand] Shutting down...\n"));
+			Sleep(1000);
+			cd->threadStop = TRUE;
+			break;
+		}
+		else {
+			_tprintf(TEXT("[Operator.c/receiveCommand] Unknown command.\n"));
+			continue;
+		}
+	}
+}
+
+int checkServer() {
+	// Try to open the server semaphore
+	HANDLE hSem = OpenSemaphore(SEMAPHORE_ALL_ACCESS, FALSE, SEMAPHORE_SERVER);
+	if (hSem == NULL) {
+		_tprintf(TEXT("[Operator.c/_tmain] Server is not running. Please start the server and try again.\n"));
+		return 1;
 	}
 }
 
@@ -44,6 +181,12 @@ int _tmain(int argc, TCHAR* argv[]) {
 	cd.hSemWrite = CreateSemaphore(NULL, 1, 1, TEXT("SemWrite"));
 	cd.hMutex = CreateSemaphore(NULL, 1, 1, TEXT("SemMutex"));
 	cd.eventHandle = CreateEvent(NULL, TRUE, FALSE, TEXT("BoardEvent"));
+	cd.threadStop = FALSE;
+
+	// Check if the server is running
+	ascii_printer();
+	int res = checkServer();
+	if (res == 1) return 1;
 
 	HANDLE hMapFile = OpenFileMapping(
 		FILE_MAP_ALL_ACCESS,
@@ -66,16 +209,12 @@ int _tmain(int argc, TCHAR* argv[]) {
 		return 1;
 	}
 
-	// Create function to display the board
-	printBoard(&cd);
-	_tprintf(TEXT("number_of_lanes: %d\tinitial_speed: %d"), cd.g->number_of_lanes, cd.g->initial_speed);
-
 	// Create threads. One for receive commands, another to send commands and another to update the board
 
 	HANDLE hThread = CreateThread(
 		NULL,
 		0,
-		(LPTHREAD_START_ROUTINE)threadFunc,
+		(LPTHREAD_START_ROUTINE)operator_manager,
 		&cd,
 		0,
 		NULL
@@ -87,9 +226,40 @@ int _tmain(int argc, TCHAR* argv[]) {
 		return;
 	}
 
-	WaitForSingleObject(hThread, INFINITE);
+	HANDLE hThread2 = CreateThread(
+		NULL,
+		0,
+		(LPTHREAD_START_ROUTINE)server_command_receiver,
+		&cd,
+		0,
+		NULL
+	);
+
+	if (hThread2 == NULL)
+	{
+		_tprintf(TEXT("[Server.c/init_server] Error creating server manager thread\n"));
+		return;
+	}
+
+	HANDLE hThread3 = CreateThread(
+		NULL,
+		0,
+		(LPTHREAD_START_ROUTINE)update_board,
+		&cd,
+		0,
+		NULL
+	);
+
+	if (hThread3 == NULL)
+	{
+		_tprintf(TEXT("[Server.c/init_server] Error creating server manager thread\n"));
+		return;
+	}
 
 	//Wait for the threads to finish with WaitForSingleObject
+	WaitForSingleObject(hThread, INFINITE);
+	WaitForSingleObject(hThread2, INFINITE);
+	WaitForSingleObject(hThread3, INFINITE);
 
 	UnmapViewOfFile(cd.g);
 	CloseHandle(hMapFile);
