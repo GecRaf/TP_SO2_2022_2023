@@ -1,2 +1,8 @@
 ﻿  operator.c
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(97,19): warning C4047: 'function': 'ControlData *' differs in levels of indirection from 'ControlData **'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(97,16): warning C4024: 'print_board': different types for formal and actual parameter 1
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(36): warning C4716: 'update_board': must return a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(170): warning C4715: 'checkServer': not all control paths return a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(121): warning C4715: 'operator_manager': not all control paths return a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(161): warning C4716: 'server_command_receiver': must return a value
   Operador.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Operator.exe
