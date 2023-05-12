@@ -179,7 +179,7 @@ void init_server(int argc, TCHAR* argv[]) {
 
 	// Shared memory 
 	
-	HANDLE hMapFile = CreateFileMapping(
+	/*HANDLE hMapFile = CreateFileMapping(
 		INVALID_HANDLE_VALUE,    // use paging file
 		NULL,                    // default security
 		PAGE_READWRITE,          // read/write access
@@ -193,7 +193,17 @@ void init_server(int argc, TCHAR* argv[]) {
 		return 1;
 	}
 
-	_tprintf(TEXT("[Server.c/init_server] Shared memory created successfully\n"));
+	_tprintf(TEXT("[Server.c/init_server] Shared memory created successfully\n"));*/
+
+	HMODULE hDLL = LoadLibrary(TEXT("DLL.dll"), NULL, 0);
+	if (hDLL == NULL) {
+		_tprintf(TEXT("[DLL_main.c/_tmain] Error loading DLL.dll.\n"));
+		return 1;
+	}
+	else {
+		_tprintf(TEXT("[DLL_main.c/_tmain] DLL.dll loaded successfully.\n"));
+	}
+
 
 	// Create pointer for Shared Memory
 	cd.g = (Game*)MapViewOfFile(hMapFile,   // handle to map object
