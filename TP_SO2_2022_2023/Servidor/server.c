@@ -1,7 +1,5 @@
 ﻿#include "server.h"
 
-//▬ᴥ
-
 void ascii_printer() {
 	_tprintf(TEXT("\t   ____                          \n"));
 	_tprintf(TEXT("\t  / __/______  ___ ____ ____ ____\n"));
@@ -14,7 +12,9 @@ void ascii_printer() {
 }
 
 void printBoard(Game* game) {
+	
 	for (int i = 0; i < game->number_of_lanes; i++) {
+		
 		_tprintf(TEXT("\n"));
 		for (int j = 0; j < MAX_BOARD_COL; j++) {
 			_tprintf(TEXT("%c"),game->board[i][j]);
@@ -37,6 +37,10 @@ void boardInitializer(Game* game) {
 	}
 }
 
+void addFrogges(Frogs* frog) {
+
+}
+
 void clear_screen() {
 	system("cls");
 }
@@ -50,6 +54,7 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 	boardInitializer(cd->g);
 	printBoard(cd->g);
 
+	/*
 	while (1) {
 		WaitForSingleObject(cd->hSemRead, INFINITE);
 		WaitForSingleObject(cd->hMutex, INFINITE);
@@ -86,6 +91,7 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 		ReleaseSemaphore(cd->hSemRead, 1, NULL);
 	}
 	return 0;
+	*/
 }
 
 void init_server(int argc, TCHAR* argv[]) {

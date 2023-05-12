@@ -1,1 +1,16 @@
-﻿  Servidor.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
+﻿  server.c
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(46,8): warning C4101: 'command': variável local não referenciada
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(47,8): warning C4101: 'command_received': variável local não referenciada
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(112,12): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(136,14): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(142,13): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(149,30): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [10]' para 'char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(152,13): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(158,25): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [13]' para 'char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(161,13): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(187,11): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(193,24): warning C4133: '=': tipos incompatíveis - de 'ControlData *' para 'LPCTSTR'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(201,12): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(243,10): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(91): warning C4716: 'server_manager': deve retornar um valor
+  Servidor.vcxproj -> C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
