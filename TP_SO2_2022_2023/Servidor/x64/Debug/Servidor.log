@@ -1,16 +1,19 @@
 ﻿  server.c
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(48,63): warning C4066: caracteres depois do primeiro em constante de caractere largo ignorados
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(49,63): warning C4066: caracteres depois do primeiro em constante de caractere largo ignorados
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(100,8): warning C4101: 'command': variável local não referenciada
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(155,12): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(177,14): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(183,13): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(190,30): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [10]' para 'char *'
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(193,13): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(199,25): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [13]' para 'char *'
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(202,13): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(226,11): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(240,12): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(295,10): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(69): warning C4716: 'runCar': deve retornar um valor
-  Servidor.vcxproj -> C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(48,63): warning C4066: characters beyond first in wide-character constant ignored
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(49,63): warning C4066: characters beyond first in wide-character constant ignored
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(106,8): warning C4101: 'command': unreferenced local variable
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(161,12): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(183,14): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(189,13): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(196,30): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(199,13): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(205,25): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(208,13): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(237,46): warning C4020: 'LoadLibraryW': too many actual parameters
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(240,11): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(248,38): error C2065: 'hMapFile': undeclared identifier
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(248,30): warning C4022: 'MapViewOfFile': pointer mismatch for actual parameter 1
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(256,12): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(315,22): error C2065: 'hMapFile': undeclared identifier
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(315,14): warning C4022: 'CloseHandle': pointer mismatch for actual parameter 1
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(318,10): warning C4098: 'init_server': 'void' function returning a value
