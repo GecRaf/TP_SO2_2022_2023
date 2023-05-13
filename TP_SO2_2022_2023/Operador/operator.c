@@ -72,29 +72,35 @@ DWORD WINAPI operator_manager(LPVOID params) {
 			_tprintf(TEXT("\t[Operator.c/console] Type 'invert' to invert the direction of travel\n"));
 			_tprintf(TEXT("\t\t[Operator.c/console] Type 'clear' to clear the screen\n"));
 			_tprintf(TEXT("[Operator.c/console] Type 'exit' to stop the operator\n"));
+			continue;
 		}
 		else if (!_tcscmp(args[0], TEXT("stop")) && i == 2) {
 			_tcscpy_s(buffer_item.command, 100, command_buffer);
 			_tprintf(TEXT("\t[Operator.c/console] Stopping car movement for '%d' seconds\n"), _ttoi(args[1]));
+			continue;
 		}
 		else if (!_tcscmp(args[0], TEXT("obstacle")) && i == 3) {
 			if (_ttoi(args[1]) > 0 && _ttoi(args[1]) <= cd->g->number_of_lanes && _ttoi(args[2]) > 0 && _ttoi(args[2]) <= MAX_BOARD_COL) {
 				_tcscpy_s(buffer_item.command, 100, command_buffer);
 				_tprintf(TEXT("\t[Operator.c/console] Inserting obstacle at lane '%d', column '%d'\n"), _ttoi(args[1]), _ttoi(args[2]));
 				SetEvent(cd->eventHandle);
+				continue;
 			}
 			else {
 				_tprintf(TEXT("\t[Operator.c/console] Invalid lane or column\n"));
+				continue;
 			}
 		}
 		else if (!_tcscmp(args[0], TEXT("invert")) && i == 2) {
 			_tcscpy_s(buffer_item.command, 100, command_buffer);
 			_tprintf(TEXT("\t[Operator.c/console] Inverting direction of travel for lane '%d'\n"), _ttoi(args[1]));
+			continue;
 		}
 		else if (!_tcscmp(args[0], TEXT("clear")) && i == 1) {
 			ascii_printer();
 			clear_screen();
 			print_board(&cd);
+			continue;
 		}
 		else if (!_tcscmp(args[0], TEXT("exit")) && i == 1) {
 			_tcscpy_s(buffer_item.command, 100, command_buffer);
