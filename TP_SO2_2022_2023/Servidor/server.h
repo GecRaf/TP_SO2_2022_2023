@@ -64,6 +64,11 @@ typedef struct {
 } Game;
 
 typedef struct {
+	int position_x;
+	int position_z;
+}Cars;
+
+typedef struct {
 	Game* g;
 	LPCTSTR shared_memmory_ptr;
 	HANDLE hSemWrite;
@@ -71,6 +76,9 @@ typedef struct {
 	HANDLE hMutex;
 	DWORD threadStop;
 	HANDLE eventHandle;
+	Frogs* f1;
+	Frogs* f2;
+	Cars* car;
 } ControlData;
 
 // Functions

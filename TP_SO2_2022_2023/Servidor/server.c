@@ -1,7 +1,5 @@
 ﻿#include "server.h"
 
-//▬ᴥ
-
 void ascii_printer() {
 	_tprintf(TEXT("\t   ____                          \n"));
 	_tprintf(TEXT("\t  / __/______  ___ ____ ____ ____\n"));
@@ -39,6 +37,43 @@ void clear_screen() {
 	system("cls");
 }
 
+
+void frogger(ControlData* cd){
+	cd->f1->position_y = rand() % 20;
+	cd->f2->position_y = rand() % 20;
+
+	while (cd->f2->position_y == cd->f1->position_y) {
+		cd->f2->position_y = rand() % 20;
+	}
+	cd->g->board[cd->g->number_of_lanes-1][cd->f1->position_y] = TEXT('s1');
+	cd->g->board[cd->g->number_of_lanes-1][cd->f2->position_y] = TEXT('s2');
+}
+
+
+DWORD WINAPI runCar(LPVOID car) {
+	ControlData* cd = (ControlData*)car;
+	int carNumber = 4;
+	int row = 1;
+	int col = 0;
+
+	for (int i = 0; i < cd->g->number_of_lanes-2; i++) {
+		for (int j = col; j < 4; j++) {
+			if (row >= 0 && row < cd->g->number_of_lanes && col >= 0 && col < MAX_BOARD_COL) {
+				cd->g->board[row][col] = TEXT('C');
+				col+=2;
+			}
+		}
+		col = 0;
+		row++;
+		row = cd->car->position_x;
+		col = cd->car->position_z;
+	}
+
+	
+
+
+}
+
 // TODO: Rafael (Console function) 
 /*if (command_received == NULL) {
 			_tprintf(TEXT("\t[*] Enter a command: "));
@@ -66,10 +101,14 @@ void clear_screen() {
 
 DWORD WINAPI server_manager(LPVOID lparam) {
 	ControlData* cd = (ControlData*)lparam;
+	cd->f1 = (Frogs*)malloc(sizeof(Frogs));
+	cd->f2 = (Frogs*)malloc(sizeof(Frogs));
 	TCHAR command[50][50];
 	BufferItem buffer_item;
 	clear_screen();
 	ascii_printer();
+	frogger(cd);
+	runCar(cd);
 	printBoard(cd->g);
 
 	while (!cd->threadStop) {
@@ -243,6 +282,24 @@ void init_server(int argc, TCHAR* argv[]) {
 
 	WaitForSingleObject(hThread, INFINITE);
 
+
+	HANDLE carThread = CreateThread(
+		NULL,
+		0,
+		runCar,
+		&cd,
+		0,
+		NULL
+	);
+
+	if (carThread == NULL) {
+		_tprintf(TEXT("[Server.c/init_server] Error creating server manager thread\n"));
+		return;
+	}
+
+	WaitForSingleObject(carThread, INFINITE);
+
+
 	// Wait for the threads to finish with WaitForSingleObject
 	UnmapViewOfFile(cd.shared_memmory_ptr);
 	CloseHandle(hMapFile);
@@ -260,5 +317,8 @@ int _tmain(int argc, TCHAR* argv[]) {
 	
 	init_server(argc, argv);
 	
+	
+
+
 	return 0;
 }
