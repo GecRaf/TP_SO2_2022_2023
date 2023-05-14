@@ -50,31 +50,74 @@ void frogger(ControlData* cd){
 }
 
 
-DWORD WINAPI runCar(LPVOID car) {
+DWORD WINAPI placeCar(LPVOID car) {
 	ControlData* cd = (ControlData*)car;
-	int carNumber = 4;
 	int row = 1;
 	int col = 0;
+	int carIndex = 0;
 
 	for (int i = 0; i < cd->g->number_of_lanes-2; i++) {
 		for (int j = col; j < 4; j++) {
 			if (row >= 0 && row < cd->g->number_of_lanes && col >= 0 && col < MAX_BOARD_COL) {
 				cd->g->board[row][col] = TEXT('C');
+				cd->car[carIndex].position_x = row;;
+				cd->car[carIndex].position_y = col;
+				carIndex++;
 				col+=2;
 			}
 		}
 		col = 0;
 		row++;
-		row = cd->car->position_x;
-		col = cd->car->position_z;
+
+		
 	}
-
-	
-
 
 }
 
-// TODO: Rafael (Console function) 
+DWORD WINAPI runCar(LPVOID carRun) {
+	ControlData* cd = (ControlData*)carRun;
+
+	int carNumber = 12;
+	int previousPos = 0;
+	int newPos = 0;
+	//cd->g->invert = 1;
+	while (TRUE)
+	{
+		for (int i = 0; i < carNumber; i++) {
+			Sleep(1000);
+			previousPos = cd->car[i].position_y;
+			
+			if (cd->g->invert == 0) {
+				int difference = (MAX_BOARD_COL - 1) - previousPos;
+				if (difference < cd->g->initial_speed)
+				{
+					newPos = cd->car[i].position_y = 0 + difference;
+				}
+				else
+				{
+					newPos = cd->car[i].position_y += cd->g->initial_speed;
+				}
+			}
+			else if (cd->g->invert == 1) {
+				int difference = 0 + previousPos;
+				if (difference < cd->g->initial_speed) {
+					newPos = cd->car[i].position_y = 19 - difference;
+				}
+				else {
+					newPos = cd->car[i].position_y -= cd->g->initial_speed;
+				}
+			}
+			cd->g->board[cd->car[i].position_x][previousPos] = TEXT('.');
+			cd->g->board[cd->car[i].position_x][newPos] = TEXT('C');
+			printBoard(cd->g);
+		}
+		
+	}
+	
+}
+
+
+// TODO: (Console function) 
 /*if (command_received == NULL) {
 			_tprintf(TEXT("\t[*] Enter a command: "));
 			_fgetts(command, 50, stdin);
@@ -99,6 +142,10 @@ DWORD WINAPI runCar(LPVOID car) {
 			ascii_printer();
 		}*/
 
+void stop() {
+
+}
+
 DWORD WINAPI server_manager(LPVOID lparam) {
 	ControlData* cd = (ControlData*)lparam;
 	cd->f1 = (Frogs*)malloc(sizeof(Frogs));
@@ -108,8 +155,9 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 	clear_screen();
 	ascii_printer();
 	frogger(cd);
-	runCar(cd);
+	placeCar(cd);
 	printBoard(cd->g);
+	runCar(cd);
 
 	while (!cd->threadStop) {
 		_tprintf(TEXT("\t[*] 3...\n"));
@@ -129,11 +177,36 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 
 		_tprintf(TEXT("\t[*] Command received: %s\n"), buffer_item.command);
 
-		//TODO: Rafaela (Command check)
+		//TODO: (Command check)
 		// stop
 		// obstacle
 		// invert
 
+		if (_tcscmp(buffer_item.command[0], _T("stop")) == 0 ) {
+			DWORD SuspendThread(HANDLE runCar);
+			Sleep(5000);
+			DWORD ResumeThread(HANDLE runCar);
+		}
+		else if(_tcscmp(buffer_item.command[0], _T("obstacle")) == 0) {
+			TCHAR y = buffer_item.command[1];
+			TCHAR x = buffer_item.command[2];
+			y = _wtoi(buffer_item.command[1]);
+			x = _wtoi(buffer_item.command[2]);
+
+			cd->g->board[y][x] = _T('@');
+			SetEvent(cd->eventHandle);
+			ResetEvent(cd->eventHandle);
+		}
+		else if (_tcscmp(buffer_item.command[0], _T("invert")) == 0) {
+			if (cd->g->invert == 0) {
+				cd->g->invert = 1;
+			}
+			else {
+				cd->g->invert = 0;
+			}
+		}
+	
+		
 		ReleaseMutex(cd->hMutex);
 		ReleaseSemaphore(cd->hSemRead, 1, NULL);
 	}
@@ -218,7 +291,7 @@ void init_server(int argc, TCHAR* argv[]) {
 
 	// Shared memory 
 	
-	/*HANDLE hMapFile = CreateFileMapping(
+	HANDLE hMapFile = CreateFileMapping(
 		INVALID_HANDLE_VALUE,    // use paging file
 		NULL,                    // default security
 		PAGE_READWRITE,          // read/write access
@@ -232,16 +305,16 @@ void init_server(int argc, TCHAR* argv[]) {
 		return 1;
 	}
 
-	_tprintf(TEXT("[Server.c/init_server] Shared memory created successfully\n"));*/
+	_tprintf(TEXT("[Server.c/init_server] Shared memory created successfully\n"));
 
-	HMODULE hDLL = LoadLibrary(TEXT("DLL.dll"), NULL, 0);
+	/*HMODULE hDLL = LoadLibrary(TEXT("DLL.dll"), NULL, 0);
 	if (hDLL == NULL) {
 		_tprintf(TEXT("[DLL_main.c/_tmain] Error loading DLL.dll.\n"));
 		return 1;
 	}
 	else {
 		_tprintf(TEXT("[DLL_main.c/_tmain] DLL.dll loaded successfully.\n"));
-	}
+	}*/
 
 
 	// Create pointer for Shared Memory
@@ -302,13 +375,14 @@ void init_server(int argc, TCHAR* argv[]) {
 		NULL
 	);
 
+
 	if (carThread == NULL) {
 		_tprintf(TEXT("[Server.c/init_server] Error creating server manager thread\n"));
 		return;
 	}
 
 	WaitForSingleObject(carThread, INFINITE);
-
+	
 
 	// Wait for the threads to finish with WaitForSingleObject
 	UnmapViewOfFile(cd.shared_memmory_ptr);
