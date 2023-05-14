@@ -53,6 +53,7 @@ typedef struct {
 	int number_of_frogs;
 	int number_of_lanes;
 	int initial_speed;
+	int invert;
 	Lanes l[MAX_ROAD_LANES];
 	Frogs f[MAX_FROGS];
 	
@@ -65,7 +66,7 @@ typedef struct {
 
 typedef struct {
 	int position_x;
-	int position_z;
+	int position_y;
 }Cars;
 
 typedef struct {
@@ -78,7 +79,8 @@ typedef struct {
 	HANDLE eventHandle;
 	Frogs* f1;
 	Frogs* f2;
-	Cars* car;
+	Cars car[16];
+	Lanes* lane;
 } ControlData;
 
 // Functions

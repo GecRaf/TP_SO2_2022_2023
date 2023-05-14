@@ -1,8 +1,8 @@
 ﻿  operator.c
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(102,19): warning C4047: 'function': 'ControlData *' differs in levels of indirection from 'ControlData **'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(102,16): warning C4024: 'print_board': different types for formal and actual parameter 1
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(36): warning C4716: 'update_board': must return a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(167): warning C4716: 'server_command_receiver': must return a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(176): warning C4715: 'checkServer': not all control paths return a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(127): warning C4715: 'operator_manager': not all control paths return a value
-  Operador.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Operator.exe
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(104,19): warning C4047: 'função': 'ControlData *' difere em níveis de indireção de 'ControlData **'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(104,16): warning C4024: 'print_board': tipos diferentes para parâmetro formal e real 1
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(36): warning C4716: 'update_board': deve retornar um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(169): warning C4716: 'server_command_receiver': deve retornar um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(178): warning C4715: 'checkServer': nem todos os caminhos de controle retornam um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Operador\operator.c(129): warning C4715: 'operator_manager': nem todos os caminhos de controle retornam um valor
+  Operador.vcxproj -> C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Operator.exe

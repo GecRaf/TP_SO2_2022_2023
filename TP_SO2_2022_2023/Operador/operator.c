@@ -66,6 +66,8 @@ DWORD WINAPI operator_manager(LPVOID params) {
 
 		ZeroMemory(buffer_item.command, 100 * sizeof(TCHAR));
 
+		_tprintf(TEXT("%d"), i);
+
 		if (!_tcscmp(args[0], TEXT("help")) && i == 1) {
 			_tprintf(TEXT("\t[Operator.c/console] Type 'stop' for the car movement to stop\n"));
 			_tprintf(TEXT("\t[Operator.c/console] Type 'obstacle' to insert an obstacle\n"));
@@ -74,7 +76,7 @@ DWORD WINAPI operator_manager(LPVOID params) {
 			_tprintf(TEXT("[Operator.c/console] Type 'exit' to stop the operator\n"));
 			continue;
 		}
-		else if (!_tcscmp(args[0], TEXT("stop")) && i == 2) {
+		else if (!_tcscmp(args[0], TEXT("stop"))  && i == 2) {
 			_tcscpy_s(buffer_item.command, 100, command_buffer);
 			_tprintf(TEXT("\t[Operator.c/console] Stopping car movement for '%d' seconds\n"), _ttoi(args[1]));
 			continue;

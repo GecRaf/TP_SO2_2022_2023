@@ -1,16 +1,35 @@
-﻿  server.c
+﻿  registry.c
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(137,22): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [10]' para 'const char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(137,59): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [13]' para 'const char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(141,27): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [10]' para 'const char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(166,27): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [13]' para 'const char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(144,15): warning C4101: 'resultado': variável local não referenciada
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(169,9): warning C4101: 'resultado': variável local não referenciada
+  server.c
 C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(48,63): warning C4066: caracteres depois do primeiro em constante de caractere largo ignorados
 C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(49,63): warning C4066: caracteres depois do primeiro em constante de caractere largo ignorados
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(100,8): warning C4101: 'command': variável local não referenciada
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(155,12): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(177,14): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(183,13): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(190,30): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [10]' para 'char *'
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(193,13): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(199,25): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [13]' para 'char *'
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(202,13): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(226,11): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(240,12): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(295,10): warning C4098: 'init_server': função 'void' retornando um valor
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(69): warning C4716: 'runCar': deve retornar um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(185,37): warning C4047: 'função': 'const wchar_t *' difere em níveis de indireção de 'TCHAR'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(185,34): warning C4024: 'wcscmp': tipos diferentes para parâmetro formal e real 1
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(190,41): warning C4047: 'função': 'const wchar_t *' difere em níveis de indireção de 'TCHAR'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(190,38): warning C4024: 'wcscmp': tipos diferentes para parâmetro formal e real 1
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(193,36): warning C4047: 'função': 'const wchar_t *' difere em níveis de indireção de 'TCHAR'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(193,33): warning C4024: '_wtoi': tipos diferentes para parâmetro formal e real 1
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(194,36): warning C4047: 'função': 'const wchar_t *' difere em níveis de indireção de 'TCHAR'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(194,33): warning C4024: '_wtoi': tipos diferentes para parâmetro formal e real 1
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(200,42): warning C4047: 'função': 'const wchar_t *' difere em níveis de indireção de 'TCHAR'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(200,39): warning C4024: 'wcscmp': tipos diferentes para parâmetro formal e real 1
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(153,8): warning C4101: 'command': variável local não referenciada
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(229,12): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(251,14): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(257,13): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(264,30): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [10]' para 'char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(267,13): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(273,25): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [13]' para 'char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(276,13): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(300,11): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(324,12): warning C4098: 'init_server': função 'void' retornando um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(387,10): warning C4098: 'init_server': função 'void' retornando um valor
+  Gerando Código...
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(75): warning C4716: 'placeCar': deve retornar um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(191): warning C4715: 'readRegistry': nem todos os caminhos de controle retornam um valor
   Servidor.vcxproj -> C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
