@@ -198,7 +198,12 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 			ResetEvent(cd->eventHandle);
 		}
 		else if (_tcscmp(buffer_item.command[0], _T("invert")) == 0) {
-			cd->g->invert = 1;
+			if (cd->g->invert == 0) {
+				cd->g->invert = 1;
+			}
+			else {
+				cd->g->invert = 0;
+			}
 		}
 	
 		
