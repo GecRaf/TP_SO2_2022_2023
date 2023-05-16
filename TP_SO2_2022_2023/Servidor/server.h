@@ -77,6 +77,7 @@ typedef struct {
 	HANDLE hMutex;
 	DWORD threadStop;
 	HANDLE eventHandle;
+	HANDLE comms;
 	Frogs* f1;
 	Frogs* f2;
 	Cars car[16];
