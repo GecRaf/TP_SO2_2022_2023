@@ -44,6 +44,7 @@ typedef struct {
 
 typedef struct {
 	int id;
+	char name[100];
 	int score;
 	int position_x;
 	int position_y;
