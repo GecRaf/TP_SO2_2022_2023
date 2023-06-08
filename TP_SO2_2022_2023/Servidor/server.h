@@ -22,10 +22,12 @@
 #define DEFAULT_GAME_TIME 60
 #define MAX_BUFFER_SIZE 10
 
+
 #define KEY_PATH TEXT("Software\\TP_SO2_2223\\")
 #define KEY_ROAD_LANES TEXT("RoadLanes")
 #define KEY_INIT_SPEED TEXT("InitialSpeed")
 #define KEY_SHARED_MEMORY TEXT("SharedMemory")
+#define NOME_PIPE TEXT("\\\\.\\pipe\\TPSO2_SERVER_FROG")
 
 // Structs
 
@@ -69,6 +71,20 @@ typedef struct {
 	int position_y;
 }Cars;
 
+//Estruturas para pipes
+typedef struct {
+	HANDLE hInstancia;
+	OVERLAPPED overlap;
+	BOOL activo;
+}pipeData;
+
+typedef struct {
+	pipeData hPipes[MAX_FROGS];
+	HANDLE hEvents[MAX_FROGS];
+	HANDLE hMutex;
+	int terminar;
+}threadData;
+
 typedef struct {
 	Game* g;
 	LPCTSTR shared_memmory_ptr;
@@ -82,7 +98,16 @@ typedef struct {
 	Frogs* f2;
 	Cars car[16];
 	Lanes* lane;
+	threadData* data;
 } ControlData;
+
+typedef struct PipeInfo {
+	HANDLE hPipes;
+	OVERLAPPED overlap;
+	BOOL active;
+}PipeInfo;
+
+
 
 // Functions
 int verifyRegistry();
