@@ -425,6 +425,91 @@ int _tmain(int argc, TCHAR* argv[]) {
 			return;
 		}
 
+
+
+		//Comunicação server frog
+		int i;
+		HANDLE hPipe, hThread, hEventTemp;
+		int numFrogs = 0;
+		TCHAR buf[256];
+		BOOL ret;
+		DWORD n, offset, nBytes;
+
+		for (i = 0; i < MAX_FROGS; i++) {
+
+			//criar evento que vai ser associado à estrutra overlaped
+			hEventTemp = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+			if (hEventTemp == NULL) {
+				_tprintf(TEXT("[ERROR] creating event\n"));
+				return -1;
+			}
+
+
+			// aqui passamos a constante FILE_FLAG_OVERLAPPED para o named pipe aceitar comunicações assincronas
+			hPipe = CreateNamedPipe(NOME_PIPE,
+				PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED,
+				PIPE_WAIT | PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE,
+				2,
+				256 * sizeof(TCHAR),
+				256 * sizeof(TCHAR),
+				1000,
+				NULL);
+
+			if (hPipe == INVALID_HANDLE_VALUE) {
+				_tprintf(TEXT("[ERROR] creating Named Pipe! (CreateNamedPipe)\n"));
+				exit(-1);
+			}
+
+
+			ZeroMemory(&cd.data->hPipes[i].overlap, sizeof(cd.data->hPipes[i].overlap));
+			cd.data->hPipes[i].hInstancia = hPipe;
+			cd.data->hPipes[i].overlap.hEvent = hEventTemp;
+			cd.data->hEvents[i] = hEventTemp;
+			cd.data->hPipes[i].activo = FALSE;
+
+			//repetir codigo thread
+			//fora do for esperar pelos eventos
+			//em cada read fazer zero memory e colocar eventos
+			//mandar estrutura overlapped nos reads e writes
+
+			if (ConnectNamedPipe(hPipe, &cd.data->hPipes[i].overlap)) {
+				_tprintf(_T("\nError while connecting to the client...\n"));
+				exit(-1);
+			}
+		}
+
+		while (numFrogs < MAX_FROGS + 1) {
+			DWORD result = WaitForMultipleObjects(MAX_FROGS, cd.data->hEvents, FALSE, 1000);
+			i = result - WAIT_OBJECT_0;
+			if (i >= 0 && i < MAX_FROGS) {
+				_tprintf(_T("\nClient connected...\n"));
+
+				if (GetOverlappedResult(cd.data->hPipes[i].hInstancia, &cd.data->hPipes[i].overlap, &nBytes, FALSE)) {
+					ResetEvent(cd.data->hEvents[i]);
+					WaitForSingleObject(cd.data->hMutex, INFINITE);
+					cd.data->hPipes[i].activo = TRUE;
+					ReleaseMutex(cd.data->hMutex);
+				}
+				numFrogs++;
+			}
+
+		}
+
+		for (i = 0; i < MAX_FROGS; i++) {
+			_tprintf(_T("\nShutting down the the pipe.\n"));
+			if (!DisconnectNamedPipe(cd.data->hPipes[i].hInstancia)) {
+				_tprintf(_T("\nError shutting down the pipe (DisconnectNamedPipe) %d.\n"), GetLastError());
+				exit(-1);
+			}
+			CloseHandle(cd.data->hPipes[i].hInstancia);
+		}
+
+
+
+		return 0;
+}
+
 		boardInitializer(&cd);
 
 		WaitForSingleObject(server_manager_thread, INFINITE);
