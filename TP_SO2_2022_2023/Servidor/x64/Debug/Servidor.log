@@ -1,23 +1,25 @@
-﻿  server.c
+﻿  registry.c
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(137,22): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'const char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(137,59): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'const char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(141,27): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'const char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(166,27): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'const char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(144,15): warning C4101: 'resultado': unreferenced local variable
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(169,9): warning C4101: 'resultado': unreferenced local variable
+  server.c
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(47,63): warning C4066: characters beyond first in wide-character constant ignored
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(48,63): warning C4066: characters beyond first in wide-character constant ignored
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(197,35): warning C4047: 'function': 'wchar_t *' differs in levels of indirection from 'TCHAR [50][50]'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(197,28): warning C4024: 'wcstok_s': different types for formal and actual parameter 1
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(207,17): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'TCHAR *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(207,14): warning C4024: 'Sleep': different types for formal and actual parameter 1
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(211,10): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(198,35): warning C4047: 'function': 'wchar_t *' differs in levels of indirection from 'TCHAR [50][50]'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(198,28): warning C4024: 'wcstok_s': different types for formal and actual parameter 1
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(208,17): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'TCHAR *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(208,14): warning C4024: 'Sleep': different types for formal and actual parameter 1
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(212,10): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(245,12): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(267,14): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(273,13): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(280,30): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(283,13): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(289,25): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(292,13): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(316,11): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(340,12): warning C4098: 'init_server': 'void' function returning a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(415,10): warning C4098: 'init_server': 'void' function returning a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(213,10): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(238,9): warning C4013: 'time' undefined; assuming extern returning int
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(286,31): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(295,26): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'char *'
+  Generating Code...
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(70): warning C4716: 'placeCar': must return a value
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(111): warning C4716: 'runCar': must return a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(173): warning C4715: 'server_manager': not all control paths return a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(174): warning C4715: 'server_manager': not all control paths return a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(191): warning C4715: 'readRegistry': not all control paths return a value
   Servidor.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe

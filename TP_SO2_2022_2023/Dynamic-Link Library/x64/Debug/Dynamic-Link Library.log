@@ -1,0 +1,46 @@
+﻿  pch.c
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Dynamic-Link Library\framework.h(7,20): error C2054: expected '(' to follow 'DLL_IMP_API'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Dynamic-Link Library\framework.h(7,65): error C2085: 'create_shared_memory': not in formal parameter list
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Dynamic-Link Library\framework.h(8,1): error C2061: syntax error: identifier 'DLL_IMP_API'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Dynamic-Link Library\framework.h(9,17): error C2054: expected '(' to follow 'DLL_IMP_API'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Dynamic-Link Library\framework.h(9,65): error C2085: 'map_shared_memory': not in formal parameter list
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Dynamic-Link Library\framework.h(10,1): error C2061: syntax error: identifier 'DLL_IMP_API'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Dynamic-Link Library\framework.h(11,18): error C2054: expected '(' to follow 'DLL_IMP_API'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Dynamic-Link Library\framework.h(11,54): error C2085: 'close_shared_memory': not in formal parameter list
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\tchar.h(23,26): warning C4081: expected ')'; found 'string'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_stdio_config.h(13,26): warning C4081: expected ')'; found 'string'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_stdio_config.h(16): warning C4079: unexpected token 'string'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_stdio_config.h(16,1): warning C4081: expected 'newline'; found ')'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_stdio_config.h(90,5): error C2085: '__local_stdio_printf_options': not in formal parameter list
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_stdio_config.h(90,5): error C2143: syntax error: missing ';' before '{'
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_stdio_config.h(129): warning C4161: #pragma pack(pop...): more pops than pushes
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wconio.h(97,41): warning C4013: '__local_stdio_printf_options' undefined; assuming extern returning int
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wconio.h(97,41): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wconio.h(124,43): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wconio.h(151,43): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h(309,41): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h(338,43): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h(371,43): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h(1063,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h(1085,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h(1157,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h(1258,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h(1306,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h(1341,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_wstdio.h(1374,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\tchar.h(755,12): error C4996: 'wcsncpy': This function or variable may be unsafe. Consider using wcsncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\tchar.h(776,12): error C4996: 'wcsncat': This function or variable may be unsafe. Consider using wcsncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\tchar.h(787,16): error C4996: 'wcstok': This function or variable may be unsafe. Consider using wcstok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\tchar.h(810,12): error C4996: '_wcsnset': This function or variable may be unsafe. Consider using _wcsnset_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\tchar.h(826,12): error C4996: '_wcsset': This function or variable may be unsafe. Consider using _wcsset_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h(645,40): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h(674,42): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h(707,42): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h(1393,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h(1440,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h(1492,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h(1541,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h(1579,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h(1653,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h(1684,13): error C2100: illegal indirection
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\stdio.h(1717,13): error C2100: illegal indirection
