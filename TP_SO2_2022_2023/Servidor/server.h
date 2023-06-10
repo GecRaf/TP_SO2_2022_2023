@@ -11,6 +11,7 @@
 
 #define MAX_SERVER 1
 #define MAX_FROGS 2
+#define BUF_TAM 265
 #define SEMAPHORE_SERVER TEXT("SERVER_INSTANCE")
 
 #define MAX_ROAD_LANES 8
@@ -74,17 +75,20 @@ typedef struct {
 
 //Estruturas para pipes
 typedef struct {
+
 	HANDLE hInstancia;
 	OVERLAPPED overlap;
-	BOOL activo;
-}pipeData;
+	BOOL ativo;
+}Data;
 
 typedef struct {
-	pipeData hPipes[MAX_FROGS];
+
+	Data hPipes[MAX_FROGS];
 	HANDLE hEvents[MAX_FROGS];
 	HANDLE hMutex;
 	int terminar;
-}threadData;
+}ThreadDados;
+
 
 typedef struct {
 	Game* g;
@@ -99,14 +103,10 @@ typedef struct {
 	Frogs* f2;
 	Cars car[16];
 	Lanes* lane;
-	threadData* data;
+	
 } ControlData;
 
-typedef struct PipeInfo {
-	HANDLE hPipes;
-	OVERLAPPED overlap;
-	BOOL active;
-}PipeInfo;
+
 
 
 

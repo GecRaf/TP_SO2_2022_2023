@@ -226,7 +226,46 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 	return 0;
 }
 
+DWORD WINAPI connectFrogs(LPVOID param) {
+	ThreadDados* pData = (Data*)param;
+	TCHAR buff[BUF_TAM];
+	DWORD n;
+
+	for (int i = 0; i < MAX_FROGS; i++) {
+
+		WaitForSingleObject(pData->hMutex, INFINITE);
+		if (pData->hPipes[i].ativo) {
+			if (!WriteFile(pData->hPipes[i].hInstancia, buff, (DWORD)_tcslen(buff) * sizeof(TCHAR), &n, NULL)) {
+				_tprintf(TEXT("[ERROR] Write on pipe! (WriteFile)\n"));
+			}
+			else {
+				BOOL ret = ReadFile(pData->hPipes[i].hInstancia, buff, sizeof(buff), &n, NULL);
+			}
+		}
+		ReleaseMutex(pData->hMutex);
+	}
+	pData->terminar = TRUE;
+	_tprintf(TEXT("(DisconnectNamedPipe)\n"));
+
+	for (int i = 0; i < MAX_FROGS; i++)
+		SetEvent(pData->hEvents[i]);
+
+	return 0;
+}
+
 int _tmain(int argc, TCHAR* argv[]) {
+
+	ThreadDados dados;
+
+	HANDLE hEventTemp;
+	HANDLE hPipe;
+	HANDLE hThread;
+
+	DWORD numFrogs = 0;
+	DWORD i = 0;
+	DWORD offset = 0;
+	DWORD nbytes = 0;
+
 	#ifdef UNICODE
 		_setmode(_fileno(stdin), _O_WTEXT);
 		_setmode(_fileno(stdout), _O_WTEXT);
@@ -477,19 +516,65 @@ int _tmain(int argc, TCHAR* argv[]) {
 				_tprintf(_T("\nError while connecting to the client...\n"));
 				exit(-1);
 			}
+
+		//Comunicaçao com os sapos
+		dados.terminar = FALSE;
+		dados.hMutex = CreateMutex(NULL, FALSE, NULL);
+		if (dados.hMutex == NULL) {
+			_tprintf("Erro na criacao do mutex\n");
+			return (-1);
 		}
 
-		while (numFrogs < MAX_FROGS + 1) {
-			DWORD result = WaitForMultipleObjects(MAX_FROGS, cd.data->hEvents, FALSE, 1000);
-			i = result - WAIT_OBJECT_0;
-			if (i >= 0 && i < MAX_FROGS) {
-				_tprintf(_T("\nClient connected...\n"));
+		for (int i = 0; i < MAX_FROGS; i++) {
 
-				if (GetOverlappedResult(cd.data->hPipes[i].hInstancia, &cd.data->hPipes[i].overlap, &nBytes, FALSE)) {
-					ResetEvent(cd.data->hEvents[i]);
-					WaitForSingleObject(cd.data->hMutex, INFINITE);
-					cd.data->hPipes[i].activo = TRUE;
-					ReleaseMutex(cd.data->hMutex);
+			hEventTemp = CreateEvent(NULL, TRUE, FALSE, NULL);
+			if (hEventTemp == NULL) {
+				_tprintf(_T("Erro\n"));
+				exit(-1);
+			}
+
+
+			hPipe = CreateNamedPipe(NOME_PIPE, PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED, PIPE_WAIT | PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE, MAX_FROGS, 256 * sizeof(TCHAR), sizeof(TCHAR) * 256, 1000, NULL);
+			if (hPipe == INVALID_HANDLE_VALUE) {
+				_tprintf(TEXT("[ERRO] Criar Named Pipe! (CreateNamedPipe)"));
+				exit(-1);
+			}
+
+			ZeroMemory(&dados.hPipes[i].overlap, sizeof(dados.hPipes[i].overlap));      //Limpar este pedaço de memoria
+			dados.hEvents[i] = hEventTemp;
+			dados.hPipes[i].hInstancia = hPipe;
+			dados.hPipes[i].ativo = FALSE;
+			dados.hPipes[i].overlap.hEvent = hEventTemp;
+
+			if (ConnectNamedPipe(hPipe, &dados.hPipes[i].overlap)) {
+				_tprintf(TEXT("[ERRO] Ligacao ao leitor! (ConnectNamedPipe\n"));
+				exit(-1);
+			}
+			_tprintf(_T("Instancia Criada\n"));
+		}
+
+		hThread = CreateThread(NULL, 0, connectFrogs, &dados, 0, NULL);
+		if (hThread == NULL) {
+			_tprintf(_T("Error\n"));
+			return (-1);
+		}
+
+		while (!dados.terminar && numFrogs < MAX_FROGS) {
+
+			_tprintf(_T("Esperar ligação de um leitor...\n"));
+
+			offset = WaitForMultipleObjects(MAX_FROGS, dados.hEvents, FALSE, INFINITE);
+			i = offset - WAIT_OBJECT_0;
+
+			if (i >= 0 && i < MAX_FROGS) {
+
+				_tprintf(_T("Leitor %d chegou\n"), i);
+				if (GetOverlappedResult(dados.hPipes[i].hInstancia, &dados.hPipes[i].overlap, &nbytes, FALSE)) {
+					ResetEvent(dados.hEvents[i]);
+
+					WaitForSingleObject(dados.hMutex, INFINITE);
+					dados.hPipes[i].ativo = TRUE;
+					ReleaseMutex(dados.hMutex);
 				}
 				numFrogs++;
 			}
@@ -503,7 +588,21 @@ int _tmain(int argc, TCHAR* argv[]) {
 				exit(-1);
 			}
 			CloseHandle(cd.data->hPipes[i].hInstancia);
-		}*/
+		}
+
+		_tprintf(_T("Sair do servidor\n"));
+
+		WaitForSingleObject(hThread, INFINITE);
+
+
+		for (int i = 0; i < MAX_FROGS; i++) {
+			DisconnectNamedPipe(dados.hPipes[i].hInstancia);
+			CloseHandle(dados.hEvents[i]);
+			CloseHandle(dados.hPipes[i].hInstancia);
+			_tprintf(_T("Instancia fechada\n"));
+		}
+		CloseHandle(dados.hMutex);
+		CloseHandle(dados.hEvents);*/
 
 		boardInitializer(&cd);
 
