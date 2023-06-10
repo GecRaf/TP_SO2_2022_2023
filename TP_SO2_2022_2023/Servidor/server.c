@@ -71,14 +71,16 @@ DWORD WINAPI placeCar(LPVOID car) {
 
 DWORD WINAPI runCar(LPVOID carRun) {
 	ControlData* cd = (ControlData*)carRun;
-
+	cd->g->game_time = 0;
 	int carNumber = 12;
 	int previousPos = 0;
 	int newPos = 0;
 	while (!cd->threadStop)
 	{
 		for (int i = 0; i < carNumber; i++) {
-			Sleep(10000);
+			Sleep(1000);
+			// Update game time converting seconds to minutes and seconds
+			cd->g->game_time++;
 			previousPos = cd->car[i].position_y;
 			
 			if (cd->g->invert == 0) {
@@ -152,7 +154,6 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 			CopyMemory(&cd->g->buffer[cd->g->in], &buffer_item, sizeof(BufferItem));
 			cd->g->in++;
 			if (cd->g->in == MAX_BUFFER_SIZE) cd->g->in = 0;
-
 			ReleaseMutex(cd->hMutex);
 			ReleaseSemaphore(cd->hSemRead, 1, NULL);
 			cd->threadStop = 1;
@@ -190,7 +191,7 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 		ReleaseMutex(cd->hMutex);
 		ReleaseSemaphore(cd->hSemWrite, 1, NULL);
 
-		_tprintf(TEXT("\t[*] Command received: %s\n"), buffer_item.command);
+		_tprintf(TEXT("\t\n[*] Command received: %s\n"), buffer_item.command);
 
 		args = (TCHAR**)malloc(sizeof(TCHAR*) * 10);
 		int i = 0;
@@ -374,6 +375,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 		cd.g->initial_speed = init_speed;
 		cd.g->in = 0;
 		cd.g->out = 0;
+		cd.g->game_time = 0;
 		cd.threadStop = 0;
 
 		// Create a thread to manage the server
@@ -425,9 +427,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 			return;
 		}
 
-
-
-		//Comunicação server frog
+		/*//Comunicação server frog
 		int i;
 		HANDLE hPipe, hThread, hEventTemp;
 		int numFrogs = 0;
@@ -503,12 +503,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 				exit(-1);
 			}
 			CloseHandle(cd.data->hPipes[i].hInstancia);
-		}
-
-
-
-		return 0;
-}
+		}*/
 
 		boardInitializer(&cd);
 

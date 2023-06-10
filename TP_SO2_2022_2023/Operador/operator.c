@@ -14,17 +14,22 @@ void clear_screen() {
 	system("cls");
 }
 
-void print_board(ControlData* cd) {
-	// Print the score of each frog
-	_tprintf(TEXT("Frog 1: %d\n"), cd->g->f[0].score);
-	_tprintf(TEXT("Frog 2: %d\n"), cd->g->f[1].score);
+void print_board(ControlData* params) {
+	ControlData* cd = (ControlData*)params;
+	// Convert the game time to print in minutes and seconds
+	int minutes = cd->g->game_time / 60;
+	int seconds = cd->g->game_time % 60;
+	_tprintf(TEXT("Game time: %d:%d\n"), minutes, seconds);	
+	_tprintf(TEXT("Score: \n"));
+	_tprintf(TEXT("\tFrog 1: %d\n"), cd->g->f[0].score);
+	_tprintf(TEXT("\tFrog 2: %d\n"), cd->g->f[1].score);
 	for (int i = 0; i < cd->g->number_of_lanes; i++) {
 		_tprintf(TEXT("\n"));
 		for (int j = 0; j < MAX_BOARD_COL; j++) {
 			_tprintf(TEXT("%c"), cd->g->board[i][j]);
 		}
 	}
-	_tprintf(TEXT("\n"));
+	_tprintf(TEXT("\n\n"));
 }
 
 DWORD WINAPI update_board(LPVOID params) {
@@ -48,7 +53,6 @@ DWORD WINAPI operator_manager(LPVOID params) {
 	TCHAR** args;
 
 	while (!cd->threadStop) {
-		_tprintf(TEXT("[Operator.c/operator_manager] Valor threadStop: %d\n"), cd->threadStop);
 		_tprintf(TEXT("[Operator.c/operator_manager] Enter a command: "));
 		_fgetts(command, 100, stdin);
 		if (cd->threadStop) break;
