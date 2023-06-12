@@ -1,16 +1,21 @@
 ﻿  server.c
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(47,63): warning C4066: characters beyond first in wide-character constant ignored
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(48,63): warning C4066: characters beyond first in wide-character constant ignored
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(200,35): warning C4047: 'function': 'wchar_t *' differs in levels of indirection from 'TCHAR [50][50]'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(200,28): warning C4024: 'wcstok_s': different types for formal and actual parameter 1
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(210,17): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'TCHAR *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(210,14): warning C4024: 'Sleep': different types for formal and actual parameter 1
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(214,10): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(215,10): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(240,9): warning C4013: 'time' undefined; assuming extern returning int
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(288,31): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(297,26): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(205,36): warning C4047: 'function': 'wchar_t *' differs in levels of indirection from 'TCHAR [50][50]'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(205,29): warning C4024: 'wcstok_s': different types for formal and actual parameter 1
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(215,18): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'TCHAR *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(215,15): warning C4024: 'Sleep': different types for formal and actual parameter 1
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(219,11): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(220,11): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(241,15): warning C4133: 'initializing': incompatible types - from 'Data *' to 'ThreadDados *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(289,9): warning C4013: 'time' undefined; assuming extern returning int
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(337,31): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(346,26): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(273,9): warning C4101: 'hThread': unreferenced local variable
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(272,9): warning C4101: 'hPipe': unreferenced local variable
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(269,14): warning C4101: 'dados': unreferenced local variable
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(271,9): warning C4101: 'hEventTemp': unreferenced local variable
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(70): warning C4716: 'placeCar': must return a value
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(113): warning C4716: 'runCar': must return a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(176): warning C4715: 'server_manager': not all control paths return a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(177): warning C4715: 'server_manager': not all control paths return a value
   Servidor.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe

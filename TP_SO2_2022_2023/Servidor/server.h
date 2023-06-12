@@ -34,6 +34,7 @@
 
 typedef struct {
 	TCHAR command[100];
+	int pid;
 } BufferItem;
 
 typedef struct {
@@ -60,7 +61,6 @@ typedef struct {
 	int invert;
 	Lanes l[MAX_ROAD_LANES];
 	Frogs f[MAX_FROGS];
-	
 	BufferItem buffer[MAX_BUFFER_SIZE];
 	HANDLE mutexSemaphore;
 	HANDLE emptySemaphore;
@@ -75,14 +75,12 @@ typedef struct {
 
 //Estruturas para pipes
 typedef struct {
-
 	HANDLE hInstancia;
 	OVERLAPPED overlap;
 	BOOL ativo;
 }Data;
 
 typedef struct {
-
 	Data hPipes[MAX_FROGS];
 	HANDLE hEvents[MAX_FROGS];
 	HANDLE hMutex;
@@ -103,7 +101,6 @@ typedef struct {
 	Frogs* f2;
 	Cars car[16];
 	Lanes* lane;
-	
 } ControlData;
 
 

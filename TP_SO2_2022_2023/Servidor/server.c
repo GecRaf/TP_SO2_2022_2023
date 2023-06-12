@@ -148,6 +148,8 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 			_tprintf(TEXT("\t[~] Exiting...\n"));
 			// Send he exit command to the client
 			_tcscpy_s(buffer_item.command, 100, TEXT("exit"));
+			buffer_item.pid = GetCurrentProcessId();
+			_tcprintf(TEXT("PID: %d"), buffer_item.pid);
 			WaitForSingleObject(cd->hSemWrite, INFINITE);
 			WaitForSingleObject(cd->hMutex, INFINITE);
 			ZeroMemory(&cd->g->buffer[cd->g->in], sizeof(BufferItem));
@@ -183,44 +185,53 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 	while (!cd->threadStop) {
 		WaitForSingleObject(cd->hSemRead, INFINITE);
 		WaitForSingleObject(cd->hMutex, INFINITE);
+		ZeroMemory(&buffer_item, sizeof(BufferItem));
 		CopyMemory(&buffer_item, &cd->g->buffer[cd->g->out], sizeof(BufferItem));
-		cd->g->out++;
+		// Print the pid of the process that sent the command
+		_tprintf(TEXT("PID: %d"), buffer_item.pid);
+		if (buffer_item.pid != GetCurrentProcessId()) {
+			cd->g->out++;
 
-		if (cd->g->out == MAX_BUFFER_SIZE) cd->g->out = 0;
+			if (cd->g->out == MAX_BUFFER_SIZE) cd->g->out = 0;
 
-		ReleaseMutex(cd->hMutex);
-		ReleaseSemaphore(cd->hSemWrite, 1, NULL);
+			ReleaseMutex(cd->hMutex);
+			ReleaseSemaphore(cd->hSemWrite, 1, NULL);
 
-		_tprintf(TEXT("\t\n[*] Command received: %s\n"), buffer_item.command);
+			_tprintf(TEXT("\t\n[*] Command received: %s\n"), buffer_item.command);
 
-		args = (TCHAR**)malloc(sizeof(TCHAR*) * 10);
-		int i = 0;
-		TCHAR *next_token = NULL;
-		TCHAR *token = _tcstok_s(command, TEXT(" "), &next_token);
-		while (token != NULL) {
-			args[i] = token;
-			token = _tcstok_s(NULL, TEXT(" "), &next_token);
-			i++;
+			args = (TCHAR**)malloc(sizeof(TCHAR*) * 10);
+			int i = 0;
+			TCHAR *next_token = NULL;
+			TCHAR *token = _tcstok_s(command, TEXT(" "), &next_token);
+			while (token != NULL) {
+				args[i] = token;
+				token = _tcstok_s(NULL, TEXT(" "), &next_token);
+				i++;
+			}
+			args[i] = NULL;
+
+			if (_tcscmp(args[0], _T("stop")) == 0) {
+				DWORD SuspendThread(HANDLE runCar);
+				Sleep(args[1]);
+				DWORD ResumeThread(HANDLE runCar);
+			}
+			else if(_tcscmp(args[0], _T("obstacle")) == 0) {
+				TCHAR y = args[1];
+				TCHAR x = args[2];
+				y = _wtoi(args[1]);
+				x = _wtoi(args[2]);
+
+				cd->g->board[y][x] = _T('@');
+				SetEvent(cd->eventHandle);
+				ResetEvent(cd->eventHandle);
+			}
+			else if (_tcscmp(args[0], _T("invert")) == 0) {
+				cd->g->invert = !cd->g->invert;
+			}
 		}
-		args[i] = NULL;
-
-		if (_tcscmp(args[0], _T("stop")) == 0) {
-			DWORD SuspendThread(HANDLE runCar);
-			Sleep(args[1]);
-			DWORD ResumeThread(HANDLE runCar);
-		}
-		else if(_tcscmp(args[0], _T("obstacle")) == 0) {
-			TCHAR y = args[1];
-			TCHAR x = args[2];
-			y = _wtoi(args[1]);
-			x = _wtoi(args[2]);
-
-			cd->g->board[y][x] = _T('@');
-			SetEvent(cd->eventHandle);
-			ResetEvent(cd->eventHandle);
-		}
-		else if (_tcscmp(args[0], _T("invert")) == 0) {
-			cd->g->invert = !cd->g->invert;
+		else {
+			ReleaseMutex(cd->hMutex);
+			ReleaseSemaphore(cd->hSemWrite, 1, NULL);
 		}
 	}
 	return 0;
@@ -298,34 +309,34 @@ int _tmain(int argc, TCHAR* argv[]) {
 
 		if (result == -1)
 		{
-			_tprintf(TEXT("[Server.c/init_server] No values stored in Registry!\n"));
+			_tprintf(TEXT("[Server.c/_tmain] No values stored in Registry!\n"));
 			// Ask for number of lanes and initial speed to the user
 
 			if (argc == 3) {
 				nr_of_lanes = _ttoi(argv[1]);
 				init_speed = _ttoi(argv[2]);
 				// Print values
-				_tprintf(TEXT("[Server.c/init_server] Number of lanes: %d\n"), nr_of_lanes);
-				_tprintf(TEXT("[Server.c/init_server] Initial speed: %d\n"), init_speed);
+				_tprintf(TEXT("[Server.c/_tmain] Number of lanes: %d\n"), nr_of_lanes);
+				_tprintf(TEXT("[Server.c/_tmain] Initial speed: %d\n"), init_speed);
 				BOOL result = createRegistry(nr_of_lanes, init_speed);
 				if (result == -1) {
-					_tprintf(TEXT("\t[Server.c/init_server] Error creating registry file!\n"));
+					_tprintf(TEXT("\t[Server.c/_tmain] Error creating registry file!\n"));
 					return -1;
 				}
 			}
 			else
 			{
-				_tprintf(TEXT("[Server.c/init_server] Invalid number of arguments!\n"));
+				_tprintf(TEXT("[Server.c/_tmain] Invalid number of arguments!\n"));
 				return -1;
 			}
 		}
 		else
 		{
-			_tprintf(TEXT("[Server.c/init_server] Values stored in Registry!\n"));
+			_tprintf(TEXT("[Server.c/_tmain] Values stored in Registry!\n"));
 			// Read values from registry
 			BOOL result = readRegistry(KEY_ROAD_LANES);
 			if (result == -1) {
-				_tprintf(TEXT("\t[Server.c/init_server] Error reading registry file!\n"));
+				_tprintf(TEXT("\t[Server.c/_tmain] Error reading registry file!\n"));
 				return -1;
 			}
 			else {
@@ -334,15 +345,15 @@ int _tmain(int argc, TCHAR* argv[]) {
 
 			result = readRegistry(KEY_INIT_SPEED);
 			if (result == -1) {
-				_tprintf(TEXT("\t[Server.c/init_server] Error reading registry file!\n"));
+				_tprintf(TEXT("\t[Server.c/_tmain] Error reading registry file!\n"));
 				return -1;
 			}
 			else {
 				init_speed = result;
 			}
 			// Print values
-			_tprintf(TEXT("\t[Server.c/init_server] Number of lanes: %d\n"), nr_of_lanes);
-			_tprintf(TEXT("\t[Server.c/init_server] Initial speed: %d\n"), init_speed);
+			_tprintf(TEXT("\t[Server.c/_tmain] Number of lanes: %d\n"), nr_of_lanes);
+			_tprintf(TEXT("\t[Server.c/_tmain] Initial speed: %d\n"), init_speed);
 		}
 
 
@@ -358,11 +369,11 @@ int _tmain(int argc, TCHAR* argv[]) {
 
 		if (hMapFile == NULL)
 		{
-			_tprintf(TEXT("[Server.c/init_server] Error creating shared memory\n"));
+			_tprintf(TEXT("[Server.c/_tmain] Error creating shared memory\n"));
 			return 1;
 		}
 
-		_tprintf(TEXT("[Server.c/init_server] Shared memory created successfully\n"));
+		_tprintf(TEXT("[Server.c/_tmain] Shared memory created successfully\n"));
 
 		/*HMODULE hDLL = LoadLibrary(TEXT("DLL.dll"), NULL, 0);
 		if (hDLL == NULL) {
@@ -382,31 +393,31 @@ int _tmain(int argc, TCHAR* argv[]) {
 			0);
 
 		if (cd.g == NULL || cd.g == INVALID_HANDLE_VALUE) {
-			_tprintf(TEXT("[Server.c/init_server] Error creating shared memory pointer\n"));
+			_tprintf(TEXT("[Server.c/_tmain] Error creating shared memory pointer\n"));
 			return 1;
 		}
-		_tprintf(TEXT("[Server.c/init_server] Shared memory pointer created successfully\n"));
+		_tprintf(TEXT("[Server.c/_tmain] Shared memory pointer created successfully\n"));
 
 		// Initialize shared memory
 
 		cd.eventHandle = CreateEvent(NULL, TRUE, FALSE, TEXT("BoardEvent"));
 		if (cd.eventHandle == NULL) {
-			_tprintf(TEXT("[Server.c/init_server] Error creating event\n"));
+			_tprintf(TEXT("[Server.c/_tmain] Error creating event\n"));
 			return -1;
 		}
 		cd.hMutex = CreateMutex(NULL, FALSE, TEXT("SemMutex"));
 		if (cd.hMutex == NULL) {
-			_tprintf(TEXT("[Server.c/init_server] Error creating mutex\n"));
+			_tprintf(TEXT("[Server.c/_tmain] Error creating mutex\n"));
 			return -1;
 		}
 		cd.hSemRead = CreateSemaphore(NULL, 0, MAX_BUFFER_SIZE, TEXT("SemRead"));
 		if (cd.hSemRead == NULL) {
-			_tprintf(TEXT("[Server.c/init_server] Error creating semaphore\n"));
+			_tprintf(TEXT("[Server.c/_tmain] Error creating semaphore\n"));
 			return -1;
 		}
 		cd.hSemWrite = CreateSemaphore(NULL, MAX_BUFFER_SIZE, MAX_BUFFER_SIZE, TEXT("SemWrite"));
 		if (cd.hSemWrite == NULL) {
-			_tprintf(TEXT("[Server.c/init_server] Error creating semaphore\n"));
+			_tprintf(TEXT("[Server.c/_tmain] Error creating semaphore\n"));
 			return -1;
 		}
 
@@ -432,7 +443,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 
 		if (server_manager_thread == NULL)
 		{
-			_tprintf(TEXT("[Server.c/init_server] Error creating server manager thread\n"));
+			_tprintf(TEXT("[Server.c/_tmain] Error creating server manager thread\n"));
 			return;
 		}
 
@@ -447,7 +458,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 
 		if (operator_command_receiver_thread == NULL)
 		{
-			_tprintf(TEXT("[Server.c/init_server] Error creating server manager thread\n"));
+			_tprintf(TEXT("[Server.c/_tmain] Error creating server manager thread\n"));
 			return;
 		}
 
@@ -462,7 +473,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 
 
 		if (carThread == NULL) {
-			_tprintf(TEXT("[Server.c/init_server] Error creating server manager thread\n"));
+			_tprintf(TEXT("[Server.c/_tmain] Error creating server manager thread\n"));
 			return;
 		}
 

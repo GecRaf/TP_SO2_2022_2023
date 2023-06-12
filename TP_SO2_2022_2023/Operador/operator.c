@@ -53,6 +53,7 @@ DWORD WINAPI operator_manager(LPVOID params) {
 	TCHAR** args;
 
 	while (!cd->threadStop) {
+		fflush(stdin);
 		_tprintf(TEXT("[Operator.c/operator_manager] Enter a command: "));
 		_fgetts(command, 100, stdin);
 		if (cd->threadStop) break;
@@ -133,6 +134,7 @@ DWORD WINAPI operator_manager(LPVOID params) {
 		ReleaseMutex(cd->hMutex);
 		ReleaseSemaphore(cd->hSemRead, 1, NULL);
 	}
+
 }
 
 DWORD WINAPI server_command_receiver(LPVOID params) {
@@ -150,11 +152,13 @@ DWORD WINAPI server_command_receiver(LPVOID params) {
 		ReleaseMutex(cd->hMutex);
 		ReleaseSemaphore(cd->hSemWrite, 1, NULL);
 
-
 		if (_tcscmp(buffer_item.command, TEXT("exit")) == 0) {
 			cd->threadStop = 1;
-			_tprintf(TEXT("\n[Operator.c/receiveCommand] Server is closing!"));
+			Sleep(1000);
+			_tprintf(TEXT("\n\n[Operator.c/receiveCommand] Server is closing!"));
+			Sleep(1000);
 			_tprintf(TEXT("\n\t[Operator.c/receiveCommand] Shutting down...\n"));
+			Sleep(1000);
 			_tprintf(TEXT("\n\t[Operator.c/receiveCommand] Press any key to exit...\n"));
 			_close(_fileno(stdin));
 		}
