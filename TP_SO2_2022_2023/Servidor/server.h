@@ -78,6 +78,7 @@ typedef struct {
 	HANDLE hInstancia;
 	OVERLAPPED overlap;
 	BOOL ativo;
+	TCHAR pressedKey[100];
 }Data;
 
 typedef struct {

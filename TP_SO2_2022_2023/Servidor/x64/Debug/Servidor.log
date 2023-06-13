@@ -1,21 +1,31 @@
-﻿  server.c
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(47,63): warning C4066: characters beyond first in wide-character constant ignored
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(48,63): warning C4066: characters beyond first in wide-character constant ignored
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(205,36): warning C4047: 'function': 'wchar_t *' differs in levels of indirection from 'TCHAR [50][50]'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(205,29): warning C4024: 'wcstok_s': different types for formal and actual parameter 1
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(215,18): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'TCHAR *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(215,15): warning C4024: 'Sleep': different types for formal and actual parameter 1
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(219,11): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(220,11): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(241,15): warning C4133: 'initializing': incompatible types - from 'Data *' to 'ThreadDados *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(289,9): warning C4013: 'time' undefined; assuming extern returning int
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(337,31): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(346,26): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(273,9): warning C4101: 'hThread': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(272,9): warning C4101: 'hPipe': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(269,14): warning C4101: 'dados': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(271,9): warning C4101: 'hEventTemp': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(70): warning C4716: 'placeCar': must return a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(113): warning C4716: 'runCar': must return a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(177): warning C4715: 'server_manager': not all control paths return a value
-  Servidor.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
+﻿  registry.c
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(137,22): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [10]' para 'const char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(137,59): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [13]' para 'const char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(141,27): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [10]' para 'const char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(166,27): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [13]' para 'const char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(144,15): warning C4101: 'resultado': variável local não referenciada
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(169,9): warning C4101: 'resultado': variável local não referenciada
+  server.c
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(47,63): warning C4066: caracteres depois do primeiro em constante de caractere largo ignorados
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(48,63): warning C4066: caracteres depois do primeiro em constante de caractere largo ignorados
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(199,35): warning C4047: 'função': 'wchar_t *' difere em níveis de indireção de 'TCHAR [50][50]'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(199,28): warning C4024: 'wcstok_s': tipos diferentes para parâmetro formal e real 1
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(209,17): warning C4047: 'função': 'DWORD' difere em níveis de indireção de 'TCHAR *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(209,14): warning C4024: 'Sleep': tipos diferentes para parâmetro formal e real 1
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(213,10): warning C4047: 'inicializando': 'TCHAR' difere em níveis de indireção de 'TCHAR *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(214,10): warning C4047: 'inicializando': 'TCHAR' difere em níveis de indireção de 'TCHAR *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(230,15): warning C4133: 'inicializando': tipos incompatíveis - de 'Data *' para 'ThreadDados *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(278,9): warning C4013: 'time' indefinido; assumindo extern retornando int
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(326,31): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [10]' para 'char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(335,26): warning C4133: 'função': tipos incompatíveis - de 'unsigned short [13]' para 'char *'
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(262,9): warning C4101: 'hThread': variável local não referenciada
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(261,9): warning C4101: 'hPipe': variável local não referenciada
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(258,14): warning C4101: 'dados': variável local não referenciada
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(260,9): warning C4101: 'hEventTemp': variável local não referenciada
+  Gerando Código...
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(70): warning C4716: 'placeCar': deve retornar um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(113): warning C4716: 'runCar': deve retornar um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(175): warning C4715: 'server_manager': nem todos os caminhos de controle retornam um valor
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(191): warning C4715: 'readRegistry': nem todos os caminhos de controle retornam um valor
+  LINK : C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe não encontrado ou não compilado pelo o último link incremental; executando link completo
+  Servidor.vcxproj -> C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
