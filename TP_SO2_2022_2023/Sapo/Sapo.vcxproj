@@ -132,6 +132,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="frog.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Frog.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\Bitmaps\areaJogo.bmp" />
+    <Image Include="..\..\Bitmaps\frog1.bmp" />
+    <Image Include="..\..\Bitmaps\frog2.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
