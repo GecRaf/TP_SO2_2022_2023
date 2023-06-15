@@ -125,7 +125,7 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 	ascii_printer();
 
 	while (!cd->threadStop) {
-		_tprintf(TEXT("[Server.c/ server_manager] Enter a command: "));
+		_tprintf(TEXT("[Server.c/server_manager] Enter a command: "));
 		Sleep(5000);
 		_fgetts(command, 100, stdin);
 		command[_tcslen(command) - 1] = '\0';
@@ -138,10 +138,10 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 		ZeroMemory(buffer_item.command, 100 * sizeof(TCHAR));
 
 		if (_tcscmp(command, TEXT("help")) == 0) {
-			_tprintf(TEXT("\t[Server.c/ server_manager] Available commands:\n"));
-			_tprintf(TEXT("\t\t[Server.c/ server_manager] help\n"));
-			_tprintf(TEXT("\t\t[Server.c/ server_manager] clear\n"));
-			_tprintf(TEXT("\t\t[Server.c/ server_manager] exit\n"));
+			_tprintf(TEXT("\t[Server.c/server_manager] Available commands:\n"));
+			_tprintf(TEXT("\t\t[Server.c/server_manager] help\n"));
+			_tprintf(TEXT("\t\t[Server.c/server_manager] clear\n"));
+			_tprintf(TEXT("\t\t[Server.c/server_manager] exit\n"));
 		}
 		else if (_tcscmp(command, TEXT("exit")) == 0) {
 			_tprintf(TEXT("\t[!] Server shutting down...\n"));
@@ -149,17 +149,8 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 			// Send he exit command to the client
 			_tcscpy_s(buffer_item.command, 100, TEXT("exit"));
 			buffer_item.pid = GetCurrentProcessId();
-			_tcprintf(TEXT("PID: %d"), buffer_item.pid);
-			WaitForSingleObject(cd->hSemWrite, INFINITE);
-			WaitForSingleObject(cd->hMutex, INFINITE);
-			ZeroMemory(&cd->g->buffer[cd->g->in], sizeof(BufferItem));
-			CopyMemory(&cd->g->buffer[cd->g->in], &buffer_item, sizeof(BufferItem));
-			cd->g->in++;
-			if (cd->g->in == MAX_BUFFER_SIZE) cd->g->in = 0;
-			ReleaseMutex(cd->hMutex);
-			ReleaseSemaphore(cd->hSemRead, 1, NULL);
+			SetEvent(cd->closingEvent);
 			cd->threadStop = 1;
-			SetEvent(cd->eventHandle);
 			Sleep(1000);
 			exit(0);
 		}
@@ -187,9 +178,9 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 		WaitForSingleObject(cd->hMutex, INFINITE);
 		ZeroMemory(&buffer_item, sizeof(BufferItem));
 		CopyMemory(&buffer_item, &cd->g->buffer[cd->g->out], sizeof(BufferItem));
-		// Print the pid of the process that sent the command
-		_tprintf(TEXT("PID: %d"), buffer_item.pid);
 		if (buffer_item.pid != GetCurrentProcessId()) {
+			// Print the pid of the process that sent the command
+			_tprintf(TEXT("\n\t[Server.c/operator_command_receiver] PID: %d"), buffer_item.pid);
 			cd->g->out++;
 
 			if (cd->g->out == MAX_BUFFER_SIZE) cd->g->out = 0;
@@ -197,7 +188,7 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 			ReleaseMutex(cd->hMutex);
 			ReleaseSemaphore(cd->hSemWrite, 1, NULL);
 
-			_tprintf(TEXT("\t\n[*] Command received: %s\n"), buffer_item.command);
+			_tprintf(TEXT("\t[Server.c/operator_command_receiver] Command received: %s\n"), buffer_item.command);
 
 			args = (TCHAR**)malloc(sizeof(TCHAR*) * 10);
 			int i = 0;
@@ -221,7 +212,7 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 				y = _wtoi(args[1]);
 				x = _wtoi(args[2]);
 
-				cd->g->board[y][x] = _T('@');
+				cd->g->board[y][x] = '@';
 				SetEvent(cd->eventHandle);
 				ResetEvent(cd->eventHandle);
 			}
@@ -232,6 +223,15 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 		else {
 			ReleaseMutex(cd->hMutex);
 			ReleaseSemaphore(cd->hSemWrite, 1, NULL);
+
+			WaitForSingleObject(cd->hSemWrite, INFINITE);
+			WaitForSingleObject(cd->hMutex, INFINITE);
+			ZeroMemory(&cd->g->buffer[cd->g->in], sizeof(BufferItem));
+			CopyMemory(&cd->g->buffer[cd->g->in], &buffer_item, sizeof(BufferItem));
+			cd->g->in++;
+			if (cd->g->in == MAX_BUFFER_SIZE) cd->g->in = 0;
+			ReleaseMutex(cd->hMutex);
+			ReleaseSemaphore(cd->hSemRead, 1, NULL);
 		}
 	}
 	return 0;
@@ -420,6 +420,11 @@ int _tmain(int argc, TCHAR* argv[]) {
 			_tprintf(TEXT("[Server.c/_tmain] Error creating semaphore\n"));
 			return -1;
 		}
+		cd.closingEvent = CreateEvent(NULL, TRUE, FALSE, TEXT("ClosingEvent"));
+		if (cd.closingEvent == NULL) {
+			_tprintf(TEXT("[Server.c/_tmain] Error creating event\n"));
+			return -1;
+		}
 
 		cd.g->number_of_lanes = nr_of_lanes;
 		cd.g->initial_speed = init_speed;
@@ -477,7 +482,6 @@ int _tmain(int argc, TCHAR* argv[]) {
 			return;
 		}
 
-	/*
 		//Comunicaçao com os sapos
 		dados.terminar = FALSE;
 		dados.hMutex = CreateMutex(NULL, FALSE, NULL);
@@ -544,11 +548,11 @@ int _tmain(int argc, TCHAR* argv[]) {
 
 		for (i = 0; i < MAX_FROGS; i++) {
 			_tprintf(_T("\nShutting down the the pipe.\n"));
-			if (!DisconnectNamedPipe(cd.data->hPipes[i].hInstancia)) {
+			if (!DisconnectNamedPipe(dados.hPipes[i].hInstancia)) {
 				_tprintf(_T("\nError shutting down the pipe (DisconnectNamedPipe) %d.\n"), GetLastError());
 				exit(-1);
 			}
-			CloseHandle(cd.data->hPipes[i].hInstancia);
+			CloseHandle(dados.hPipes[i].hInstancia);
 		}
 
 		_tprintf(_T("Sair do servidor\n"));
@@ -563,7 +567,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 			_tprintf(_T("Instancia fechada\n"));
 		}
 		CloseHandle(dados.hMutex);
-		CloseHandle(dados.hEvents);*/
+		CloseHandle(dados.hEvents);
 
 		boardInitializer(&cd);
 
@@ -579,6 +583,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 		CloseHandle(cd.hMutex);
 		CloseHandle(cd.hSemRead);
 		CloseHandle(cd.hSemWrite);
+		CloseHandle(cd.closingEvent);
 
 	return 0;
 }

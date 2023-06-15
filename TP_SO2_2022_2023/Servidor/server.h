@@ -13,6 +13,7 @@
 #define MAX_FROGS 2
 #define BUF_TAM 265
 #define SEMAPHORE_SERVER TEXT("SERVER_INSTANCE")
+#define SEMAPHORE_OPERATOR TEXT("OPERATOR_INSTANCE")
 
 #define MAX_ROAD_LANES 8
 #define MAX_CARS_PER_LANE 8
@@ -22,7 +23,7 @@
 #define MAX_GAME_TIME 10000
 #define DEFAULT_GAME_TIME 60
 #define MAX_BUFFER_SIZE 10
-
+#define UPDATE_INTERVAL 1000
 
 #define KEY_PATH TEXT("Software\\TP_SO2_2223\\")
 #define KEY_ROAD_LANES TEXT("RoadLanes")
@@ -88,7 +89,6 @@ typedef struct {
 	int terminar;
 }ThreadDados;
 
-
 typedef struct {
 	Game* g;
 	LPCTSTR shared_memmory_ptr;
@@ -102,11 +102,11 @@ typedef struct {
 	Frogs* f2;
 	Cars car[16];
 	Lanes* lane;
+	HANDLE closingEvent;
+	HANDLE hTypingEvent;
+	CRITICAL_SECTION cs;
+	HANDLE h_console;
 } ControlData;
-
-
-
-
 
 // Functions
 int verifyRegistry();

@@ -8,6 +8,7 @@
 #include <io.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <conio.h>
 
 #include "../Servidor/server.h"
 
