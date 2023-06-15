@@ -64,6 +64,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
 
+
+    
 // ============================================================================
 // 5. Loop de Mensagens
 // ============================================================================
@@ -79,22 +81,71 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
     return((int)lpMsg.wParam);
 }
 
-
-typedef struct {
-    TCHAR c;
-    int xPos, yPos;
-}PosChar;
-LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam, int nCmdShow) {
     HDC hdc;
     RECT rect;
+    static HBITMAP hBmp;
+    static HBITMAP hBmpBoard;
+    static BITMAP bmp = { 0 };
+    static BITMAP bmpBoard = { 0 };
+    static HDC bmpDC = NULL;
+    static HDC bmpBoardDC = NULL;
+
     PAINTSTRUCT ps;
-    static PosChar posicoes[1000];
-    static int totalPos = 0;
-    static TCHAR curChar = '?';
-    int i;
 
     switch (messg) {
 
+    case WM_CREATE:
+        hBmp = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/frog1.bmp"), IMAGE_BITMAP, 35, 35, LR_LOADFROMFILE);
+        hBmpBoard = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/areaJogo.bmp"), IMAGE_BITMAP, 35, 35, LR_LOADFROMFILE);
+        
+        GetObject(hBmp, sizeof(bmp), &bmp);
+        GetObject(hBmpBoard,sizeof(bmpBoard),&bmpBoard);
+
+        hdc = GetDC(hWnd);
+        bmpDC = CreateCompatibleDC(hdc);
+        bmpBoardDC = CreateCompatibleDC(hdc);
+
+        SelectObject(bmpDC, hBmp);
+        SelectObject(bmpBoardDC, hBmpBoard);
+
+        ReleaseDC(hWnd, hdc);
+
+        GetClientRect(hWnd, &rect);
+
+
+        break;
+
+    case WM_PAINT:
+        hdc = BeginPaint(hWnd, &ps);
+        GetClientRect(hWnd, &rect);
+
+        // Obter as dimensões da janela
+        RECT rect;
+        GetClientRect(hWnd, &rect);
+        int windowWidth = rect.right - rect.left;
+        int windowHeight = rect.bottom - rect.top;
+
+        // Obter as dimensões do bitmap
+        BITMAP bm;
+        GetObject(hBmp, sizeof(BITMAP), &bm);
+        int bitmapWidth = bm.bmWidth;
+        int bitmapHeight = bm.bmHeight;
+
+
+
+        // Calcular as coordenadas para centralizar o bitmap
+        int x = (windowWidth - bitmapWidth) / 2;
+        int y = (windowHeight - bitmapHeight) / 2;
+
+
+        BitBlt(hdc, 0, 0, bmp.bmWidth, bmp.bmHeight, bmpDC, 0, 0, SRCCOPY);
+        BitBlt(hdc, x, y, bitmapWidth, bitmapHeight, bmpBoardDC, 0, 0, SRCCOPY);
+
+
+        EndPaint(hWnd, &ps);
+
+        break;
     case WM_CLOSE:
         if (MessageBox(hWnd, TEXT("Tem a certeza que quer sair?"), TEXT("Confirmação"), MB_ICONQUESTION | MB_YESNO) == IDYES) {
             DestroyWindow(hWnd);
@@ -103,6 +154,10 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
 
     case WM_DESTROY:// Destruir a janela e terminar o programa 
         // "PostQuitMessage(Exit Status)"
+        DeleteDC(bmpDC);
+
+        DeleteObject(hBmp);
+
         PostQuitMessage(0);
         break;
     default:

@@ -1,7 +1,4 @@
 ﻿  frog.c
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Sapo\frog.c(88,9): warning C4101: 'hdc': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Sapo\frog.c(90,17): warning C4101: 'ps': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Sapo\frog.c(94,9): warning C4101: 'i': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Sapo\frog.c(89,10): warning C4101: 'rect': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Sapo\frog.c(154,28): warning C4267: 'function': conversion from 'size_t' to 'DWORD', possible loss of data
-  Sapo.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Frog.exe
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Sapo\frog.c(84,98): warning C4029: lista de parâmetros formais declarada diferente da definição
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Sapo\frog.c(207,28): warning C4267: 'função': conversão de 'size_t' para 'DWORD', possível perda de dados
+  Sapo.vcxproj -> C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Frog.exe
