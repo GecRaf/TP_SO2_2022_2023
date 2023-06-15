@@ -8,6 +8,7 @@
 #include <io.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <time.h>
 
 #define MAX_SERVER 1
 #define MAX_FROGS 2

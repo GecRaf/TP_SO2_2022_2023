@@ -1,6 +1,8 @@
 #include "operator.h"
 
 void ascii_printer() {
+	// Simple ASCII art printer for the operator
+
 	_tprintf(TEXT("\t   ____                          \n"));
 	_tprintf(TEXT("\t  / __/______  ___ ____ ____ ____\n"));
 	_tprintf(TEXT("\t / _// __/ _ \\/ _ `/ _ `/ -_) __/\n"));
@@ -10,30 +12,25 @@ void ascii_printer() {
 }
 
 void clear_screen() {
+	// Clear the screen
+
 	system("cls");
 }
 
-COORD get_cursor_pos() {
-	CONSOLE_SCREEN_BUFFER_INFO cbsi;
-	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cbsi)) {
-		return cbsi.dwCursorPosition;
-	}
-	else {
-		COORD invalid = { 0, 0 };
-		return invalid;
-	}
-}
-
 void set_cursor_pos(COORD pos) {
+	// Set the cursor position
+
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
 void print_board(ControlData* params) {
+	// Function responsible for printing the board and the game information
+
 	ControlData* cd = (ControlData*)params;
 	CRITICAL_SECTION* cs = &cd->cs;
 	// Convert the game time to print in minutes and seconds
 	int minutes = cd->g->game_time / 60;
-	int seconds = cd->g->game_time % 60;
+	int seconds = cd->g->game_time % 60; // TODO: Check this later, got to be re-done
 	EnterCriticalSection(cs);
 	COORD current_pos = get_cursor_pos();
 	COORD print_cord;
@@ -58,7 +55,39 @@ void print_board(ControlData* params) {
 	LeaveCriticalSection(cs);
 }
 
+void clear_line(COORD coord) {
+	// Function responsible for clearing a fixed size of the screen (1000 chars)
+	// from a given position, allowing for the constant printing of the board and command reader at the same time
+
+	COORD current_pos = coord;
+	COORD print_cord;
+	print_cord.X = 0;
+	print_cord.Y = current_pos.Y;
+	set_cursor_pos(print_cord);
+	for (int i = 0; i < 1000; i++) {
+		_tprintf(TEXT(" "));
+	}
+	set_cursor_pos(print_cord);
+}
+
+COORD get_cursor_pos() {
+	// Function responsible for getting the current cursor position
+
+	CONSOLE_SCREEN_BUFFER_INFO cbsi;
+	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cbsi)) {
+		return cbsi.dwCursorPosition;
+	}
+	else {
+		COORD invalid = { 0, 0 };
+		return invalid;
+	}
+}
+
 DWORD WINAPI update_board(LPVOID params) {
+	// Function responsible for updating the board and printing it
+	// Basically a thread that waits for the event to be signaled and then prints the board
+	// This signal is sent by the server thread, indicating that the board has been updated
+
 	ControlData* cd = (ControlData*)params;
 
 	fflush(stdin);
@@ -73,19 +102,11 @@ DWORD WINAPI update_board(LPVOID params) {
 	}
 }
 
-void clear_line(COORD coord) {
-	COORD current_pos = coord;
-	COORD print_cord;
-	print_cord.X = 0;
-	print_cord.Y = current_pos.Y;
-	set_cursor_pos(print_cord);
-	for (int i = 0; i < 1000; i++) {
-		_tprintf(TEXT(" "));
-	}
-	set_cursor_pos(print_cord);
-}
-
 DWORD WINAPI operator_manager(LPVOID params) {
+	// Function responsible for managing the operator thread
+	// Processes the commands received from the operator and sends them to the server
+	// It is printed in the bottom of the screen, allowing for the constant printing of the board and command reader at the same time
+
 	ControlData* cd = (ControlData*)params;
 	CRITICAL_SECTION* cs = &cd->cs;
 	BufferItem buffer_item;
@@ -98,10 +119,9 @@ DWORD WINAPI operator_manager(LPVOID params) {
 		COORD current_pos = get_cursor_pos();
 		COORD print_cord;
 		print_cord.X = 0;
-		print_cord.Y = 10 + cd->g->number_of_lanes + 3;
+		print_cord.Y = 14 + cd->g->number_of_lanes;
 		set_cursor_pos(print_cord);
 		fflush(stdin);
-		//clearLine();
 		_tprintf(TEXT("[Operator.c/operator_manager] Enter a command: "));
 		LeaveCriticalSection(cs);
 		if (WaitForSingleObject(cd->closingEvent, 0) == WAIT_OBJECT_0) {
@@ -133,8 +153,6 @@ DWORD WINAPI operator_manager(LPVOID params) {
 
 		ZeroMemory(buffer_item.command, 100 * sizeof(TCHAR));
 
-		//clearLine();
-
 		if (!_tcscmp(args[0], TEXT("help")) && i == 1) {
 			clear_line(print_cord);
 			_tprintf(TEXT("\n\t\t[Operator.c/operator_manager] Available commands:\n"));
@@ -150,6 +168,8 @@ DWORD WINAPI operator_manager(LPVOID params) {
 			_tprintf(TEXT("\t[Operator.c/operator_manager] Stopping operator\n"));
 			SetEvent(cd->closingEvent);
 			Sleep(1000);
+			// TODO: Later solve this. All operators close because we're signaling the closing event
+			// Gotta think of another strategy
 			break;
 		}
 		else if (!_tcscmp(args[0], TEXT("clear")) && i == 1) {
@@ -231,6 +251,10 @@ DWORD WINAPI operator_manager(LPVOID params) {
 }
 
 DWORD WINAPI server_command_receiver(LPVOID params) {
+	// Function that receives commands from the server
+	// Could basically be called the "terminator" since the only thing it does is to receive the command to stop the operator
+	// because the server is shutting down. It is also being used to terminate the operator but it needs to be re-done. TODO
+
 	ControlData* cd = (ControlData*)params;
 	BufferItem buffer_item;
 

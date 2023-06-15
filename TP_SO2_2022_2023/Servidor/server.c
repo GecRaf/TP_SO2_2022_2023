@@ -1,6 +1,8 @@
 ﻿#include "server.h"
 
 void ascii_printer() {
+	// This function will print the ascii art of the game
+
 	_tprintf(TEXT("\t   ____                          \n"));
 	_tprintf(TEXT("\t  / __/______  ___ ____ ____ ____\n"));
 	_tprintf(TEXT("\t / _// __/ _ \\/ _ `/ _ `/ -_) __/\n"));
@@ -10,17 +12,31 @@ void ascii_printer() {
 	_tprintf(TEXT("\n"));
 }
 
-void printBoard(Game* game) {
-	for (int i = 0; i < game->number_of_lanes; i++) {
-		_tprintf(TEXT("\n"));
-		for (int j = 0; j < MAX_BOARD_COL; j++) {
-			_tprintf(TEXT("%c"),game->board[i][j]);
-		}
+void set_cursor_pos(COORD pos) {
+	// This function will set the cursor position to the given position
+
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+
+void clear_line(COORD coord) {
+	// Function responsible for clearing a fixed size of the screen (800 chars)
+	// from a given position, allowing for the constant printing of the server command reader and the operators log
+
+	COORD current_pos = coord;
+	COORD print_cord;
+	print_cord.X = 0;
+	print_cord.Y = current_pos.Y;
+	set_cursor_pos(print_cord);
+	for (int i = 0; i < 800; i++) {
+		_tprintf(TEXT(" "));
 	}
-	_tprintf(TEXT("\n"));
+	set_cursor_pos(print_cord);
 }
 
 void boardInitializer(ControlData* cd) {
+	// Function responsible for initializing the board with the given number of lanes
+	// It is called only once at the start of the server.
+
 	for (int i = 0; i < cd->g->number_of_lanes; i++) {
 		for (int j = 0; j < MAX_BOARD_COL; j++) {
 			if (i == 0 || i == cd->g->number_of_lanes - 1) {
@@ -34,10 +50,15 @@ void boardInitializer(ControlData* cd) {
 }
 
 void clear_screen() {
+	// Function responsible for clearing the screen
+
 	system("cls");
 }
 
 void frogger(ControlData* cd){
+	// Function responsible for initializing the frogs in the board
+	// Both frogs will be placed in the last lane of the board, in random positions
+
 	cd->f1->position_y = rand() % 20;
 	cd->f2->position_y = rand() % 20;
 
@@ -48,7 +69,27 @@ void frogger(ControlData* cd){
 	cd->g->board[cd->g->number_of_lanes-1][cd->f2->position_y] = TEXT('s2');
 }
 
+COORD get_cursor_pos() {
+	// Function responsible for getting the current cursor position
+
+	CONSOLE_SCREEN_BUFFER_INFO cbsi;
+	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cbsi)) {
+		return cbsi.dwCursorPosition;
+	}
+	else {
+		COORD invalid = { 0, 0 };
+		return invalid;
+	}
+}
+
+DWORD WINAPI game_verifications(LPVOID params) {
+	// This thread will be responsible for verifying all the game rules and plays
+	// It will run until the game is over
+}
+
 DWORD WINAPI placeCar(LPVOID car) {
+	// This thread will be responsible for placing the cars in the board
+	
 	ControlData* cd = (ControlData*)car;
 	int row = 1;
 	int col = 0;
@@ -70,6 +111,8 @@ DWORD WINAPI placeCar(LPVOID car) {
 }
 
 DWORD WINAPI runCar(LPVOID carRun) {
+	// This thread will be responsible for moving the cars in the board
+
 	ControlData* cd = (ControlData*)carRun;
 	cd->g->game_time = 0;
 	int carNumber = 12;
@@ -113,7 +156,10 @@ DWORD WINAPI runCar(LPVOID carRun) {
 }
 
 DWORD WINAPI server_manager(LPVOID lparam) {
+	// Function that processes the commands entered by the user in the server console
+	
 	ControlData *cd = (ControlData*)lparam;
+	CRITICAL_SECTION* cs = &cd->cs;
 	BufferItem buffer_item;
 	TCHAR command[100];
 	TCHAR command_buffer[100];
@@ -125,11 +171,33 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 	ascii_printer();
 
 	while (!cd->threadStop) {
+		EnterCriticalSection(cs);
+		
+		COORD print_cord;
+		print_cord.X = 0;
+		print_cord.Y = 8;
+		set_cursor_pos(print_cord);
+		fflush(stdin);
 		_tprintf(TEXT("[Server.c/server_manager] Enter a command: "));
-		Sleep(5000);
+
+		COORD current_pos = get_cursor_pos();
+
+		COORD title_pos;
+		title_pos.X = 0;
+		title_pos.Y = 15;
+
+		set_cursor_pos(title_pos);
+
+		_tprintf(TEXT("\n[Server.c/operator_command_receiver] Operator Log:"));
+
+		set_cursor_pos(current_pos);
+
+		LeaveCriticalSection(cs);
 		_fgetts(command, 100, stdin);
 		command[_tcslen(command) - 1] = '\0';
 		_tcscpy_s(command_buffer, 100, command);
+
+		EnterCriticalSection(cs);
 
 		if (_tcscmp(command, TEXT("")) == 0) {
 			continue;
@@ -138,7 +206,8 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 		ZeroMemory(buffer_item.command, 100 * sizeof(TCHAR));
 
 		if (_tcscmp(command, TEXT("help")) == 0) {
-			_tprintf(TEXT("\t[Server.c/server_manager] Available commands:\n"));
+			clear_line(print_cord);
+			_tprintf(TEXT("\n\n\t[Server.c/server_manager] Available commands:\n"));
 			_tprintf(TEXT("\t\t[Server.c/server_manager] help\n"));
 			_tprintf(TEXT("\t\t[Server.c/server_manager] clear\n"));
 			_tprintf(TEXT("\t\t[Server.c/server_manager] exit\n"));
@@ -164,14 +233,38 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 			clear_screen();
 			ascii_printer();
 		}
+
+		set_cursor_pos(current_pos);
+
+		LeaveCriticalSection(cs);
 	}
 }
 
 DWORD WINAPI operator_command_receiver(LPVOID lparam) {
+	// Function responsible for receiving the commands from the operator and applying them to the game
+
 	ControlData* cd = (ControlData*)lparam;
+	CRITICAL_SECTION* cs = &cd->cs;
 	TCHAR command[50][50];
 	BufferItem buffer_item;
 	TCHAR** args;
+
+	COORD print_cord;
+	print_cord.X = 1;
+	print_cord.Y = 14;
+
+	SYSTEMTIME systemTime;
+
+	// Get the current local time
+	GetLocalTime(&systemTime);
+
+	int year = systemTime.wYear;
+	int month = systemTime.wMonth;
+	int day = systemTime.wDay;
+	int hour = systemTime.wHour;
+	int minute = systemTime.wMinute;
+	int second = systemTime.wSecond;
+
 
 	while (!cd->threadStop) {
 		WaitForSingleObject(cd->hSemRead, INFINITE);
@@ -180,7 +273,18 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 		CopyMemory(&buffer_item, &cd->g->buffer[cd->g->out], sizeof(BufferItem));
 		if (buffer_item.pid != GetCurrentProcessId()) {
 			// Print the pid of the process that sent the command
-			_tprintf(TEXT("\n\t[Server.c/operator_command_receiver] PID: %d"), buffer_item.pid);
+			EnterCriticalSection(cs);
+			COORD current_pos = get_cursor_pos();
+			
+			print_cord.Y += 2;
+
+			if (print_cord.Y > 25) {
+				print_cord.Y = 16;
+			}
+
+			set_cursor_pos(print_cord);
+
+			wprintf(L"\n\t[%04d-%02d-%02d || %02d:%02d:%02d] Operator PID: %d\n", year, month, day, hour, minute, second, buffer_item.pid);
 			cd->g->out++;
 
 			if (cd->g->out == MAX_BUFFER_SIZE) cd->g->out = 0;
@@ -188,7 +292,10 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 			ReleaseMutex(cd->hMutex);
 			ReleaseSemaphore(cd->hSemWrite, 1, NULL);
 
-			_tprintf(TEXT("\t[Server.c/operator_command_receiver] Command received: %s\n"), buffer_item.command);
+			wprintf(L"\t[%04d-%02d-%02d || %02d:%02d:%02d] Command received: %s\n", year, month, day, hour, minute, second, buffer_item.command);
+
+			set_cursor_pos(current_pos);
+			LeaveCriticalSection(cs);
 
 			args = (TCHAR**)malloc(sizeof(TCHAR*) * 10);
 			int i = 0;
@@ -238,6 +345,8 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 }
 
 DWORD WINAPI connectFrogs(LPVOID param) {
+	// Function responsible for connecting the frogs to the game
+
 	ThreadDados* pData = (Data*)param;
 	TCHAR buff[BUF_TAM];
 	DWORD n;
@@ -432,6 +541,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 		cd.g->out = 0;
 		cd.g->game_time = 0;
 		cd.threadStop = 0;
+		InitializeCriticalSectionAndSpinCount(&cd.cs, 200);
 
 		// Create a thread to manage the server
 		// Lots of threads going on, one for acceptiing clients, others for managing the clients and messages
@@ -482,7 +592,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 			return;
 		}
 
-		//Comunicaçao com os sapos
+		/*Comunicaçao com os sapos
 		dados.terminar = FALSE;
 		dados.hMutex = CreateMutex(NULL, FALSE, NULL);
 		if (dados.hMutex == NULL) {
@@ -567,7 +677,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 			_tprintf(_T("Instancia fechada\n"));
 		}
 		CloseHandle(dados.hMutex);
-		CloseHandle(dados.hEvents);
+		CloseHandle(dados.hEvents);*/
 
 		boardInitializer(&cd);
 
