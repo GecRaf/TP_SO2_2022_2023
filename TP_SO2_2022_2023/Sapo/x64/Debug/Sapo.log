@@ -1,12 +1,4 @@
 ﻿  frog.c
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Sapo\frog.c(84,98): warning C4029: declared formal parameter list different from definition
 C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Sapo\frog.c(209,28): warning C4267: 'function': conversion from 'size_t' to 'DWORD', possible loss of data
-  
-Frog.rc(52): error RC2135: file not found: C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\Bitmaps\frog1.bmp
-  
-  
-Frog.rc(54): error RC2135: file not found: C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\Bitmaps\frog2.bmp
-  
-  
-Frog.rc(56): error RC2135: file not found: C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\Bitmaps\areaJogo.bmp
-  
+  Sapo.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Frog.exe

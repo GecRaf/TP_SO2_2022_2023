@@ -61,6 +61,7 @@ typedef struct {
 	int number_of_lanes;
 	int initial_speed;
 	int invert;
+	int game_level;
 	Lanes l[MAX_ROAD_LANES];
 	Frogs f[MAX_FROGS];
 	BufferItem buffer[MAX_BUFFER_SIZE];
@@ -81,6 +82,7 @@ typedef struct {
 	OVERLAPPED overlap;
 	BOOL ativo;
 	TCHAR pressedKey[100];
+	int pid;
 }Data;
 
 typedef struct {
@@ -92,6 +94,7 @@ typedef struct {
 
 typedef struct {
 	Game* g;
+	ThreadDados* Td;
 	LPCTSTR shared_memmory_ptr;
 	HANDLE hSemWrite;
 	HANDLE hSemRead;

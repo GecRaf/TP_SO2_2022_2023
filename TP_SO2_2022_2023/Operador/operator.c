@@ -23,6 +23,34 @@ void set_cursor_pos(COORD pos) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
+COORD get_cursor_pos() {
+	// Function responsible for getting the current cursor position
+
+	CONSOLE_SCREEN_BUFFER_INFO cbsi;
+	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cbsi)) {
+		return cbsi.dwCursorPosition;
+	}
+	else {
+		COORD invalid = { 0, 0 };
+		return invalid;
+	}
+}
+
+void clear_line(COORD coord, int lines) {
+	// Function responsible for clearing a fixed size of the screen (1000 chars)
+	// from a given position, allowing for the constant printing of the board and command reader at the same time
+
+	COORD current_pos = coord;
+	COORD print_cord;
+	print_cord.X = 0;
+	print_cord.Y = current_pos.Y;
+	set_cursor_pos(print_cord);
+	for (int i = 0; i < lines; i++) {
+		_tprintf(TEXT(" "));
+	}
+	set_cursor_pos(print_cord);
+}
+
 void print_board(ControlData* params) {
 	// Function responsible for printing the board and the game information
 
@@ -30,15 +58,16 @@ void print_board(ControlData* params) {
 	CRITICAL_SECTION* cs = &cd->cs;
 	// Convert the game time to print in minutes and seconds
 	int minutes = cd->g->game_time / 60;
-	int seconds = cd->g->game_time % 60; // TODO: Check this later, got to be re-done
+	int seconds = cd->g->game_time % 60;
 	EnterCriticalSection(cs);
 	COORD current_pos = get_cursor_pos();
 	COORD print_cord;
 	print_cord.X = 0;
 	print_cord.Y = 8;
 
-	set_cursor_pos(print_cord);
+	clear_line(print_cord, 100);
 
+	set_cursor_pos(print_cord);
 	_tprintf(TEXT("Game time: %d:%d\n"), minutes, seconds);	
 	_tprintf(TEXT("Score: \n"));
 	_tprintf(TEXT("\tFrog 1: %d\n"), cd->g->f[0].score);
@@ -53,34 +82,6 @@ void print_board(ControlData* params) {
 
 	set_cursor_pos(current_pos);
 	LeaveCriticalSection(cs);
-}
-
-void clear_line(COORD coord) {
-	// Function responsible for clearing a fixed size of the screen (1000 chars)
-	// from a given position, allowing for the constant printing of the board and command reader at the same time
-
-	COORD current_pos = coord;
-	COORD print_cord;
-	print_cord.X = 0;
-	print_cord.Y = current_pos.Y;
-	set_cursor_pos(print_cord);
-	for (int i = 0; i < 1000; i++) {
-		_tprintf(TEXT(" "));
-	}
-	set_cursor_pos(print_cord);
-}
-
-COORD get_cursor_pos() {
-	// Function responsible for getting the current cursor position
-
-	CONSOLE_SCREEN_BUFFER_INFO cbsi;
-	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cbsi)) {
-		return cbsi.dwCursorPosition;
-	}
-	else {
-		COORD invalid = { 0, 0 };
-		return invalid;
-	}
 }
 
 DWORD WINAPI update_board(LPVOID params) {
@@ -154,7 +155,7 @@ DWORD WINAPI operator_manager(LPVOID params) {
 		ZeroMemory(buffer_item.command, 100 * sizeof(TCHAR));
 
 		if (!_tcscmp(args[0], TEXT("help")) && i == 1) {
-			clear_line(print_cord);
+			clear_line(print_cord, 1000);
 			_tprintf(TEXT("\n\t\t[Operator.c/operator_manager] Available commands:\n"));
 			_tprintf(TEXT("\t[Operator.c/operator_manager] Type 'stop' for the car movement to stop\n"));
 			_tprintf(TEXT("\t[Operator.c/operator_manager] Type 'obstacle' to insert an obstacle\n"));
@@ -173,7 +174,7 @@ DWORD WINAPI operator_manager(LPVOID params) {
 			break;
 		}
 		else if (!_tcscmp(args[0], TEXT("clear")) && i == 1) {
-			clear_line(print_cord);
+			clear_line(print_cord, 1000);
 		}
 		else if (!_tcscmp(args[0], TEXT("stop")) && i == 2) {
 			_tcscpy_s(buffer_item.command, 100, command_buffer);
@@ -191,7 +192,7 @@ DWORD WINAPI operator_manager(LPVOID params) {
 			ReleaseMutex(cd->hMutex);
 			ReleaseSemaphore(cd->hSemRead, 1, NULL);
 			Sleep(_ttoi(args[1]) * 1000);
-			clear_line(print_cord);
+			clear_line(print_cord, 1000);
 		}
 		else if (!_tcscmp(args[0], TEXT("invert")) && i == 2) {
 			_tcscpy_s(buffer_item.command, 100, command_buffer);
@@ -209,7 +210,7 @@ DWORD WINAPI operator_manager(LPVOID params) {
 			ReleaseMutex(cd->hMutex);
 			ReleaseSemaphore(cd->hSemRead, 1, NULL);
 			Sleep(1000);
-			clear_line(print_cord);
+			clear_line(print_cord, 1000);
 		}
 		else if (!_tcscmp(args[0], TEXT("obstacle")) && i == 3) {
 			if (_ttoi(args[1]) > 0 && _ttoi(args[1]) <= cd->g->number_of_lanes && _ttoi(args[2]) > 0 && _ttoi(args[2]) <= MAX_BOARD_COL) {
@@ -229,18 +230,18 @@ DWORD WINAPI operator_manager(LPVOID params) {
 				ReleaseMutex(cd->hMutex);
 				ReleaseSemaphore(cd->hSemRead, 1, NULL);
 				Sleep(1000);
-				clear_line(print_cord);
+				clear_line(print_cord, 1000);
 			}
 			else {
 				_tprintf(TEXT("\t[Operator.c/operator_manager] Invalid lane or column\n"));
 				Sleep(1000);
-				clear_line(print_cord);
+				clear_line(print_cord, 1000);
 			}
 		}
 		else {
 			_tprintf(TEXT("\t[Operator.c/operator_manager] Unknown command.\n"));
 			Sleep(1000);
-			clear_line(print_cord);
+			clear_line(print_cord, 1000);
 		}
 
 		set_cursor_pos(current_pos);

@@ -85,6 +85,213 @@ COORD get_cursor_pos() {
 DWORD WINAPI game_verifications(LPVOID params) {
 	// This thread will be responsible for verifying all the game rules and plays
 	// It will run until the game is over
+
+	ControlData* cd = (ControlData*)params;
+	Game* game = cd->g;
+	Frogs* frog = cd->f1;  // Assuming f1 is the player's frog
+	Cars* cars = cd->car;  // Assuming car is the array of cars
+	Lanes* lanes = game->l;  // Assuming l is the array of lanes
+	ThreadDados* tData = cd->Td;  // Assuming td is the array of threads data
+	Data data;
+
+	while (!cd->threadStop) {
+		TCHAR keyPressed[100];
+		DWORD bytesRead;
+
+		// Wait for the signal hTypingEvent to be set
+		WaitForSingleObject(cd->hTypingEvent, INFINITE);
+
+		// Check what named pipe was written to
+		// There can be two named pipes, one for each player
+		// The named pipe that was written to will be the one that has Data structure with the pressed key
+		// The other named pipe will have the Data structure with the pressed key empty
+
+		// Check if the named pipe that has the pressed key is the player's named pipe
+		if (WaitForSingleObject(cd->Td->hPipes[0].hInstancia, 0) == WAIT_OBJECT_0) {
+			// Read the pressed key from the player's named pipe
+			ReadFile(cd->Td->hPipes[0].hInstancia, &data, sizeof(Data), &bytesRead, NULL);
+		}
+		// Check if the named pipe that has the pressed key is the other player's named pipe
+		else if (WaitForSingleObject(cd->Td->hPipes[1].hInstancia, 0) == WAIT_OBJECT_0) {
+			// Read the pressed key from the other player's named pipe
+			ReadFile(cd->Td->hPipes[1].hInstancia, &data, sizeof(Data), &bytesRead, NULL);
+		}
+
+		// Copy the pressed key from the Data structure
+		EnterCriticalSection(&cd->cs);
+		_tcscpy_s(keyPressed, 100, data.pressedKey);  // Assuming index 0 is the player's index
+		LeaveCriticalSection(&cd->cs);
+
+		// Check if the game_time is at 0, meaning the game is over
+		// If it is, break the loop
+		if (game->game_time == 0) {
+			break;
+		}
+
+		// Perform game verifications based on the pressed key
+		if (!_tcscmp(keyPressed, TEXT("VK_LEFT"))) {
+			// Check if the player's frog is in the first lane
+			// If it is, move the frog
+			if (frog->position_y == 0) {
+				// Check if the desired position exists
+				// If it doesn't, move the frog to the other side of the board
+				if (game->board[game->number_of_lanes - 1][frog->position_y + 1] == TEXT('-')) {
+					game->board[game->number_of_lanes - 1][frog->position_y] = TEXT('.');
+					game->board[game->number_of_lanes - 1][frog->position_y + 1] = TEXT('s');
+					frog->position_y++;
+				}
+			}
+			// Check if the desired position is empty
+			// If it is, move the frog
+			else if (game->board[game->number_of_lanes - 1][frog->position_y - 1] == TEXT('.')) {
+				game->board[game->number_of_lanes - 1][frog->position_y] = TEXT('.');
+				game->board[game->number_of_lanes - 1][frog->position_y - 1] = TEXT('s');
+				frog->position_y--;
+			}
+			// Check if the desired position is a car
+			// If it is, the game must display a game over message
+			else if (game->board[game->number_of_lanes - 1][frog->position_y - 1] == TEXT('C')) {
+				// Display game over message
+				// Set the game over flag to true
+				// Stop the game
+				_tprintf(TEXT("Game Over!"));
+				cd->threadStop = 1;
+			}
+			// Check if the desired position is part of the final lane
+			// If it is, check if the game_level is at 3, that is the max, if it is, the player won, if not advances to the next level
+			else if (game->board[game->number_of_lanes - 1][frog->position_y - 1] == TEXT('-')) {
+				if (game->game_level == 3) {
+					// Display game won message
+					// Set the game over flag to true
+					// Stop the game
+					_tprintf(TEXT("You Won!"));
+					cd->threadStop = 1;
+				}
+				else {
+					// Display level up message
+					// Increase the game_level
+					// Reset the player's frog position
+					_tprintf(TEXT("Level Up!"));
+					game->game_level++;
+					game->board[game->number_of_lanes - 1][frog->position_y] = TEXT('.');
+					frog->position_y = rand() % 20;
+					game->board[game->number_of_lanes - 1][frog->position_y] = TEXT('S');
+					// Each time the player advances to the next level, the cars must move faster 15% and the game_time must decrease by a percentage of 15%
+					for (int i = 0; i < game->number_of_lanes - 1; i++) {
+						//lanes[i].lane_speed = lanes[i].lane_speed * 0.85;
+					}
+					game->game_time = game->game_time * 0.85;
+				}
+			}
+		}
+		else if (!_tcscmp(keyPressed, TEXT("VK_RIGHT"))) {
+			// Check if the player's frog is in the first lane
+			// If it is, move the frog
+			if (frog->position_y == 0) {
+				// Check if the desired position exists
+				// If it doesn't, move the frog to the other side of the board
+				if (game->board[game->number_of_lanes - 1][frog->position_y + 1] == TEXT('-')) {
+					game->board[game->number_of_lanes - 1][frog->position_y] = TEXT('.');
+					game->board[game->number_of_lanes - 1][frog->position_y + 1] = TEXT('s');
+					frog->position_y++;
+				}
+			}
+			// Check if the desired position is empty
+			// If it is, move the frog
+			else if (game->board[game->number_of_lanes - 1][frog->position_y + 1] == TEXT('.')) {
+				game->board[game->number_of_lanes - 1][frog->position_y] = TEXT('.');
+				game->board[game->number_of_lanes - 1][frog->position_y + 1] = TEXT('s');
+				frog->position_y++;
+			}
+			// Check if the desired position is a car
+			// If it is, the game must display a game over message
+			else if (game->board[game->number_of_lanes - 1][frog->position_y + 1] == TEXT('C')) {
+				// Display game over message
+				// Set the game over flag to true
+				// Stop the game
+				_tprintf(TEXT("Game Over!"));
+				cd->threadStop = 1;
+			}
+		}
+		else if (!_tcscmp(keyPressed, TEXT("VK_UP"))) {
+			// Check if the desired position is part of the final lane
+			// If it is, check if the game_level is at 3, that is the max, if it is, the player won, if not advances to the next level
+			if (game->board[game->number_of_lanes - 1][frog->position_y] == TEXT('-')) {
+				if (game->game_level == 3) {
+					// Display game won message
+					// Set the game over flag to true
+					// Stop the game
+					_tprintf(TEXT("You Won!"));
+					cd->threadStop = 1;
+				}
+				else {
+					// Display level up message
+					// Increase the game_level
+					// Reset the player's frog position
+					_tprintf(TEXT("Level Up!"));
+					game->game_level++;
+					game->board[game->number_of_lanes - 1][frog->position_y] = TEXT('.');
+					frog->position_y = rand() % 20;
+					game->board[game->number_of_lanes - 1][frog->position_y] = TEXT('S');
+					// Each time the player advances to the next level, the cars must move faster 15% and the game_time must decrease by a percentage of 15%
+					for (int i = 0; i < game->number_of_lanes - 1; i++) {
+						//lanes[i].lane_speed = lanes[i].lane_speed * 0.85;
+					}
+					game->game_time = game->game_time * 0.85;
+				}
+			}
+			// Else , check if the desired position is empty
+			// If it is, move the frog
+			else if (game->board[game->number_of_lanes - 1][frog->position_y] == TEXT('.')) {
+				game->board[game->number_of_lanes - 1][frog->position_y] = TEXT('s');
+				game->board[game->number_of_lanes - 2][frog->position_y] = TEXT('.');
+				frog->position_x--;
+			}
+			// Else, check if the desired position is a car
+			// If it is, the game must display a game over message
+			else if (game->board[game->number_of_lanes - 1][frog->position_y] == TEXT('C')) {
+				// Display game over message
+				// Set the game over flag to true
+				// Stop the game
+				_tprintf(TEXT("Game Over!"));
+				cd->threadStop = 1;
+			}
+		}
+		else if (!_tcscmp(keyPressed, TEXT("VK_DOWN"))) {
+			// Handle down movement logic
+			// Check if the desired position is out of bounds
+			// If it is, does nothing, else, move the frog
+			if (frog->position_x == game->number_of_lanes - 1) {
+				// Does nothing
+			}
+			else {
+				// Check if the desired position is empty
+				// If it is, move the frog
+				if (game->board[game->number_of_lanes - 2][frog->position_y] == TEXT('.')) {
+					game->board[game->number_of_lanes - 2][frog->position_y] = TEXT('s');
+					game->board[game->number_of_lanes - 1][frog->position_y] = TEXT('.');
+					frog->position_x++;
+				}
+				// Else, check if the desired position is a car
+				// If it is, the game must display a game over message
+				else if (game->board[game->number_of_lanes - 2][frog->position_y] == TEXT('C')) {
+					// Display game over message
+					// Set the game over flag to true
+					// Stop the game
+					_tprintf(TEXT("Game Over!"));
+					cd->threadStop = 1;
+				}
+			}
+		}
+		else {
+			// Invalid key pressed, ignore or handle accordingly
+		}
+
+		// Reset the pressed key in the Data structure
+		EnterCriticalSection(&cd->cs);
+		//_tcscpy_s(data->pressedKey, 100, TEXT(""));  // Assuming index 0 is the player's index
+		LeaveCriticalSection(&cd->cs);
+	}
 }
 
 DWORD WINAPI placeCar(LPVOID car) {
@@ -114,16 +321,38 @@ DWORD WINAPI runCar(LPVOID carRun) {
 	// This thread will be responsible for moving the cars in the board
 
 	ControlData* cd = (ControlData*)carRun;
-	cd->g->game_time = 0;
+	CRITICAL_SECTION* cs = &cd->cs;
 	int carNumber = 12;
 	int previousPos = 0;
 	int newPos = 0;
+
+	COORD current_pos = get_cursor_pos();
+
+	COORD print_cord;
+	print_cord.X = 5;
+	print_cord.Y = 15;
+	set_cursor_pos(print_cord);
+
 	while (!cd->threadStop)
 	{
+		WaitForSingleObject(cd->hMutex, INFINITE);
 		for (int i = 0; i < carNumber; i++) {
 			Sleep(1000);
 			// Update game time converting seconds to minutes and seconds
-			cd->g->game_time++;
+			if (cd->g->game_time == 0) {
+				EnterCriticalSection(cs);
+
+				COORD game_over_cord;
+				game_over_cord.X = 30;
+				game_over_cord.Y = 10;
+				set_cursor_pos(game_over_cord);
+
+				_tprintf(TEXT("Game Over!"));
+				LeaveCriticalSection(cs);
+				set_cursor_pos(current_pos);
+				break;
+			}
+			cd->g->game_time = cd->g->game_time - 1;
 			previousPos = cd->car[i].position_y;
 			
 			if (cd->g->invert == 0) {
@@ -150,9 +379,7 @@ DWORD WINAPI runCar(LPVOID carRun) {
 			cd->g->board[cd->car[i].position_x][newPos] = TEXT('C');
 			SetEvent(cd->eventHandle);
 		}
-		
 	}
-	
 }
 
 DWORD WINAPI server_manager(LPVOID lparam) {
@@ -240,6 +467,23 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 	}
 }
 
+TCHAR** split_command(TCHAR* command) {
+	// Function that splits the command into arguments
+	TCHAR** args = (TCHAR**)malloc(50 * sizeof(TCHAR*));
+	TCHAR* next_token;
+	TCHAR* token;
+	int i = 0;
+	token = _tcstok_s(command, TEXT(" "), &next_token);
+	while (token != NULL) {
+		args[i] = (TCHAR*)malloc(50 * sizeof(TCHAR));
+		_tcscpy_s(args[i], 50, token);
+		token = _tcstok_s(NULL, TEXT(" "), &next_token);
+		i++;
+	}
+	args[i] = NULL;
+	return args;
+}
+
 DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 	// Function responsible for receiving the commands from the operator and applying them to the game
 
@@ -253,25 +497,24 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 	print_cord.X = 1;
 	print_cord.Y = 14;
 
-	SYSTEMTIME systemTime;
-
-	// Get the current local time
-	GetLocalTime(&systemTime);
-
-	int year = systemTime.wYear;
-	int month = systemTime.wMonth;
-	int day = systemTime.wDay;
-	int hour = systemTime.wHour;
-	int minute = systemTime.wMinute;
-	int second = systemTime.wSecond;
-
-
 	while (!cd->threadStop) {
 		WaitForSingleObject(cd->hSemRead, INFINITE);
 		WaitForSingleObject(cd->hMutex, INFINITE);
 		ZeroMemory(&buffer_item, sizeof(BufferItem));
 		CopyMemory(&buffer_item, &cd->g->buffer[cd->g->out], sizeof(BufferItem));
 		if (buffer_item.pid != GetCurrentProcessId()) {
+			SYSTEMTIME systemTime;
+
+			// Get the current local time
+			GetLocalTime(&systemTime);
+
+			int year = systemTime.wYear;
+			int month = systemTime.wMonth;
+			int day = systemTime.wDay;
+			int hour = systemTime.wHour;
+			int minute = systemTime.wMinute;
+			int second = systemTime.wSecond;
+
 			// Print the pid of the process that sent the command
 			EnterCriticalSection(cs);
 			COORD current_pos = get_cursor_pos();
@@ -294,23 +537,15 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 
 			wprintf(L"\t[%04d-%02d-%02d || %02d:%02d:%02d] Command received: %s\n", year, month, day, hour, minute, second, buffer_item.command);
 
+			// Split the command into arguments
+			args = split_command(buffer_item.command);
+
 			set_cursor_pos(current_pos);
 			LeaveCriticalSection(cs);
 
-			args = (TCHAR**)malloc(sizeof(TCHAR*) * 10);
-			int i = 0;
-			TCHAR *next_token = NULL;
-			TCHAR *token = _tcstok_s(command, TEXT(" "), &next_token);
-			while (token != NULL) {
-				args[i] = token;
-				token = _tcstok_s(NULL, TEXT(" "), &next_token);
-				i++;
-			}
-			args[i] = NULL;
-
 			if (_tcscmp(args[0], _T("stop")) == 0) {
 				DWORD SuspendThread(HANDLE runCar);
-				Sleep(args[1]);
+				Sleep(_wtoi(args[1])*1000);
 				DWORD ResumeThread(HANDLE runCar);
 			}
 			else if(_tcscmp(args[0], _T("obstacle")) == 0) {
@@ -539,9 +774,94 @@ int _tmain(int argc, TCHAR* argv[]) {
 		cd.g->initial_speed = init_speed;
 		cd.g->in = 0;
 		cd.g->out = 0;
-		cd.g->game_time = 0;
+		cd.g->game_time = 100;
 		cd.threadStop = 0;
 		InitializeCriticalSectionAndSpinCount(&cd.cs, 200);
+
+		//Comunicaçao com os sapos
+		dados.terminar = FALSE;
+		dados.hMutex = CreateMutex(NULL, FALSE, NULL);
+		if (dados.hMutex == NULL) {
+			_tprintf("[Server.c/_tmain] Error creating mutex\n");
+			return (-1);
+		}
+
+		for (int i = 0; i < MAX_FROGS; i++) {
+			ZeroMemory(&dados.hPipes[i].overlap, sizeof(dados.hPipes[i].overlap));      //Limpar este pedaço de memoria
+			dados.hEvents[i] = CreateEvent(NULL, TRUE, FALSE, NULL);
+			if (dados.hEvents[i] == NULL) {
+				_tprintf(_T("[Server.c/_tmain] Error creating event\n"));
+				exit(-1);
+			}
+			dados.hPipes[i].hInstancia = CreateNamedPipe(NOME_PIPE, PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED, PIPE_WAIT | PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE, MAX_FROGS, 256 * sizeof(TCHAR), sizeof(TCHAR) * 256, 1000, NULL);
+			if (dados.hPipes[i].hInstancia == INVALID_HANDLE_VALUE) {
+				_tprintf(_T("[Server.c/_tmain] Error creating named pipe\n"));
+				exit(-1);
+			}
+			dados.hPipes[i].ativo = FALSE;
+			dados.hPipes[i].overlap.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+			if (dados.hPipes[i].overlap.hEvent == NULL) {
+				_tprintf(_T("[Server.c/_tmain] Error creating event\n"));
+				exit(-1);
+			}
+
+			if (ConnectNamedPipe(dados.hPipes[i].hInstancia, &dados.hPipes[i].overlap)) {
+				_tprintf(TEXT("[Server.c/_tmain] Connection successful! (ConnectNamedPipe)\n"));
+				exit(-1);
+			}
+			_tprintf(_T("[Server.c/_tmain] Instance succefully created\n"));
+		}
+
+		hThread = CreateThread(NULL, 0, connectFrogs, &dados, 0, NULL);
+		if (hThread == NULL) {
+			_tprintf(_T("[Server.c/_tmain] Error creating thread\n"));
+			return (-1);
+		}
+
+		while (!dados.terminar && numFrogs < MAX_FROGS) {
+
+			_tprintf(_T("[Server.c/_tmain] Waiting for the connection to the client\n"));
+
+			offset = WaitForMultipleObjects(MAX_FROGS, dados.hEvents, FALSE, INFINITE);
+			i = offset - WAIT_OBJECT_0;
+
+			if (i >= 0 && i < MAX_FROGS) {
+				_tprintf(_T("[Server.c/_tmain] Client %d connected\n"), i);
+				if (GetOverlappedResult(dados.hPipes[i].hInstancia, &dados.hPipes[i].overlap, &nbytes, FALSE)) {
+					ResetEvent(dados.hEvents[i]);
+
+					WaitForSingleObject(dados.hMutex, INFINITE);
+					dados.hPipes[i].ativo = TRUE;
+					ReleaseMutex(dados.hMutex);
+				}
+				numFrogs++;
+			}
+
+		}
+
+		for (i = 0; i < MAX_FROGS; i++) {
+			_tprintf(_T("\n[Server.c/_tmain] Shutting down the the pipe.\n"));
+			if (!DisconnectNamedPipe(dados.hPipes[i].hInstancia)) {
+				_tprintf(_T("\n[Server.c/_tmain] Error shutting down the pipe (DisconnectNamedPipe) %d.\n"), GetLastError());
+				exit(-1);
+			}
+			CloseHandle(dados.hPipes[i].hInstancia);
+		}
+
+		_tprintf(_T("[Server.c/_tmain] Exiting the server\n"));
+
+		WaitForSingleObject(hThread, INFINITE);
+
+
+		for (int i = 0; i < MAX_FROGS; i++) {
+			DisconnectNamedPipe(dados.hPipes[i].hInstancia);
+			CloseHandle(dados.hEvents[i]);
+			CloseHandle(dados.hPipes[i].hInstancia);
+			_tprintf(_T("[Server.c/_tmain] Instance closed\n"));
+		}
+
+		CloseHandle(dados.hMutex);
+		CloseHandle(dados.hEvents);
 
 		// Create a thread to manage the server
 		// Lots of threads going on, one for acceptiing clients, others for managing the clients and messages
@@ -592,98 +912,26 @@ int _tmain(int argc, TCHAR* argv[]) {
 			return;
 		}
 
-		/*Comunicaçao com os sapos
-		dados.terminar = FALSE;
-		dados.hMutex = CreateMutex(NULL, FALSE, NULL);
-		if (dados.hMutex == NULL) {
-			_tprintf("Erro na criacao do mutex\n");
-			return (-1);
-		}
+		/*HANDLE game_verifications_thread = CreateThread(
+			NULL,
+			0,
+			game_verifications,
+			&cd,
+			0,
+			NULL
+		);
 
-		for (int i = 0; i < MAX_FROGS; i++) {
-
-			hEventTemp = CreateEvent(NULL, TRUE, FALSE, NULL);
-			if (hEventTemp == NULL) {
-				_tprintf(_T("Erro\n"));
-				exit(-1);
-			}
-
-
-			hPipe = CreateNamedPipe(NOME_PIPE, PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED, PIPE_WAIT | PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE, MAX_FROGS, 256 * sizeof(TCHAR), sizeof(TCHAR) * 256, 1000, NULL);
-			if (hPipe == INVALID_HANDLE_VALUE) {
-				_tprintf(TEXT("[ERRO] Criar Named Pipe! (CreateNamedPipe)"));
-				exit(-1);
-			}
-
-			ZeroMemory(&dados.hPipes[i].overlap, sizeof(dados.hPipes[i].overlap));      //Limpar este pedaço de memoria
-			dados.hEvents[i] = hEventTemp;
-			dados.hPipes[i].hInstancia = hPipe;
-			dados.hPipes[i].ativo = FALSE;
-			dados.hPipes[i].overlap.hEvent = hEventTemp;
-
-			if (ConnectNamedPipe(hPipe, &dados.hPipes[i].overlap)) {
-				_tprintf(TEXT("[ERRO] Ligacao ao leitor! (ConnectNamedPipe\n"));
-				exit(-1);
-			}
-			_tprintf(_T("Instancia Criada\n"));
-		}
-
-		hThread = CreateThread(NULL, 0, connectFrogs, &dados, 0, NULL);
-		if (hThread == NULL) {
-			_tprintf(_T("Error\n"));
-			return (-1);
-		}
-
-		while (!dados.terminar && numFrogs < MAX_FROGS) {
-
-			_tprintf(_T("Esperar ligação de um leitor...\n"));
-
-			offset = WaitForMultipleObjects(MAX_FROGS, dados.hEvents, FALSE, INFINITE);
-			i = offset - WAIT_OBJECT_0;
-
-			if (i >= 0 && i < MAX_FROGS) {
-
-				_tprintf(_T("Leitor %d chegou\n"), i);
-				if (GetOverlappedResult(dados.hPipes[i].hInstancia, &dados.hPipes[i].overlap, &nbytes, FALSE)) {
-					ResetEvent(dados.hEvents[i]);
-
-					WaitForSingleObject(dados.hMutex, INFINITE);
-					dados.hPipes[i].ativo = TRUE;
-					ReleaseMutex(dados.hMutex);
-				}
-				numFrogs++;
-			}
-
-		}
-
-		for (i = 0; i < MAX_FROGS; i++) {
-			_tprintf(_T("\nShutting down the the pipe.\n"));
-			if (!DisconnectNamedPipe(dados.hPipes[i].hInstancia)) {
-				_tprintf(_T("\nError shutting down the pipe (DisconnectNamedPipe) %d.\n"), GetLastError());
-				exit(-1);
-			}
-			CloseHandle(dados.hPipes[i].hInstancia);
-		}
-
-		_tprintf(_T("Sair do servidor\n"));
-
-		WaitForSingleObject(hThread, INFINITE);
-
-
-		for (int i = 0; i < MAX_FROGS; i++) {
-			DisconnectNamedPipe(dados.hPipes[i].hInstancia);
-			CloseHandle(dados.hEvents[i]);
-			CloseHandle(dados.hPipes[i].hInstancia);
-			_tprintf(_T("Instancia fechada\n"));
-		}
-		CloseHandle(dados.hMutex);
-		CloseHandle(dados.hEvents);*/
+		if (game_verifications_thread == NULL) {
+			_tprintf(TEXT("[Server.c/_tmain] Error creating server manager thread\n"));
+			return;
+		}*/
 
 		boardInitializer(&cd);
 
 		WaitForSingleObject(server_manager_thread, INFINITE);
 		WaitForSingleObject(operator_command_receiver_thread, INFINITE);
 		WaitForSingleObject(carThread, INFINITE);
+		//WaitForSingleObject(game_verifications_thread, INFINITE);
 
 		// Wait for the threads to finish with WaitForSingleObject
 		UnmapViewOfFile(cd.g);

@@ -1,21 +1,29 @@
-﻿  server.c
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(74,63): warning C4066: characters beyond first in wide-character constant ignored
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(75,63): warning C4066: characters beyond first in wide-character constant ignored
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(284,36): warning C4047: 'function': 'wchar_t *' differs in levels of indirection from 'TCHAR [50][50]'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(284,29): warning C4024: 'wcstok_s': different types for formal and actual parameter 1
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(294,18): warning C4047: 'function': 'DWORD' differs in levels of indirection from 'TCHAR *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(294,15): warning C4024: 'Sleep': different types for formal and actual parameter 1
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(298,11): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(299,11): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(329,15): warning C4133: 'initializing': incompatible types - from 'Data *' to 'ThreadDados *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(377,9): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(425,31): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(434,26): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'char *'
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(361,9): warning C4101: 'hThread': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(360,9): warning C4101: 'hPipe': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(357,14): warning C4101: 'dados': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(359,9): warning C4101: 'hEventTemp': unreferenced local variable
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(97): warning C4716: 'placeCar': must return a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(140): warning C4716: 'runCar': must return a value
-C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(223): warning C4715: 'server_manager': not all control paths return a value
+﻿  registry.c
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(137,22): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'const char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(137,59): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'const char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(141,27): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'const char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(166,27): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'const char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(144,15): warning C4101: 'resultado': unreferenced local variable
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(169,9): warning C4101: 'resultado': unreferenced local variable
+  server.c
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(68,63): warning C4066: characters beyond first in wide-character constant ignored
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(69,63): warning C4066: characters beyond first in wide-character constant ignored
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(183,40): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(240,40): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(552,11): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(553,11): warning C4047: 'initializing': 'TCHAR' differs in levels of indirection from 'TCHAR *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(492,8): warning C4101: 'command': unreferenced local variable
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(585,15): warning C4133: 'initializing': incompatible types - from 'Data *' to 'ThreadDados *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(633,9): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(681,31): warning C4133: 'function': incompatible types - from 'unsigned short [10]' to 'char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(690,26): warning C4133: 'function': incompatible types - from 'unsigned short [13]' to 'char *'
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(785,13): warning C4133: 'function': incompatible types - from 'char [26]' to 'const wchar_t *const '
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(616,9): warning C4101: 'hPipe': unreferenced local variable
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(615,9): warning C4101: 'hEventTemp': unreferenced local variable
+  Generating Code...
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(383): warning C4716: 'runCar': must return a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(318): warning C4716: 'placeCar': must return a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(468): warning C4715: 'server_manager': not all control paths return a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\server.c(295): warning C4716: 'game_verifications': must return a value
+C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\Servidor\registry.c(191): warning C4715: 'readRegistry': not all control paths return a value
   Servidor.vcxproj -> C:\Users\Rafac\Desktop\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Server.exe
