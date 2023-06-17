@@ -85,13 +85,18 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
 
 LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam, int nCmdShow) {
     HDC hdc;
-    RECT rect;
+    static RECT rect;
     static HBITMAP hBmp;
     static HBITMAP hBmpBoard;
+    static HBITMAP hBmpCar;
     static BITMAP bmp = { 0 };
     static BITMAP bmpBoard = { 0 };
+    static BITMAP bmpCar = { 0 };
     static HDC bmpDC = NULL;
     static HDC bmpBoardDC = NULL;
+    static HDC bmpCarDC = NULL;
+    ControlData* cd = (ControlData*)lParam;
+    static Frogs frog = { 0 }; // Estrutura para representar o sapo
 
     PAINTSTRUCT ps;
 
@@ -100,37 +105,70 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
     case WM_CREATE:
         hBmp = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/frog1.bmp"), IMAGE_BITMAP, 35, 35, LR_LOADFROMFILE);
         hBmpBoard = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/areaJogo.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+        hBmpCar = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/car1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
         
         GetObject(hBmp, sizeof(bmp), &bmp);
         GetObject(hBmpBoard,sizeof(bmpBoard),&bmpBoard);
+        GetObject(hBmpCar, sizeof(bmpCar), &bmpCar);
+
+        frog.position_x = 0; // Coordenada x centralizada
+        frog.position_y = bmpBoard.bmHeight - bmpBoard.bmHeight; // Coordenada y centralizada
+        frog.last_position_x = frog.position_x;
+        frog.last_position_y = frog.position_y;
+
+        // Defina as coordenadas iniciais do "frog"
+        int frogX = 0;
+        int frogY = bmpBoard.bmHeight - bmp.bmHeight;
+
+        int carPositionX = 0; // Coordenada x inicial do carro
+        int carPositionY = 9;
 
         hdc = GetDC(hWnd);
         bmpDC = CreateCompatibleDC(hdc);
         bmpBoardDC = CreateCompatibleDC(hdc);
+        bmpCarDC = CreateCompatibleDC(hdc);
 
         SelectObject(bmpDC, hBmp);
         SelectObject(bmpBoardDC, hBmpBoard);
+        SelectObject(bmpCarDC, hBmpCar);
 
         ReleaseDC(hWnd, hdc);
 
         GetClientRect(hWnd, &rect);
 
-        // Defina o novo tamanho desejado para o bitmap hBmpBoard
-        int novoLargura = 50; // Nova largura em pixels
-        int novoAltura = 50; // Nova altura em pixels
 
-        // Criar um novo bitmap com o novo tamanho
-        HBITMAP hNovoBmpBoard = CreateCompatibleBitmap(hdc, novoLargura, novoAltura);
+        break;
 
-        // Selecionar o novo bitmap no contexto de dispositivo
-        HBITMAP hOldBmpBoard = (HBITMAP)SelectObject(bmpBoardDC, hNovoBmpBoard);
+    case WM_KEYDOWN:
+        // Guardar a posição anterior do sapo
+        frog.last_position_x = frog.position_x;
+        frog.last_position_y = frog.position_y;
 
-        // Redimensionar o bitmap usando StretchBlt
-        StretchBlt(bmpBoardDC, 0, 0, novoLargura, novoAltura, hdc, 0, 0, bmpBoard.bmWidth, bmpBoard.bmHeight, SRCCOPY);
+        switch (wParam) {
+        case VK_LEFT:
+            if (frog.position_x - FROG_SPEED >= (rect.right - rect.left - bmpBoard.bmWidth) / 2) {
+                frog.position_x -= FROG_SPEED;
+            }
+            break;
+        case VK_RIGHT:
+            if (frog.position_x + bmp.bmWidth + FROG_SPEED <= (rect.right - rect.left + bmpBoard.bmWidth) / 2) {
+                frog.position_x += FROG_SPEED;
+            }
+            break;
+        case VK_UP:
+            if (frog.position_y - FROG_SPEED >= (rect.bottom - rect.top - bmpBoard.bmHeight) / 2) {
+                frog.position_y -= FROG_SPEED;
+            }
+            break;
+        case VK_DOWN:
+            if (frog.position_y + bmp.bmHeight + FROG_SPEED <= (rect.bottom - rect.top + bmpBoard.bmHeight) / 2) {
+                frog.position_y += FROG_SPEED;
+            }
+            break;
+        }
 
-        // Restaurar o bitmap original no contexto de dispositivo
-        SelectObject(bmpBoardDC, hOldBmpBoard);
-
+        // Redesenha a janela para atualizar a posição do sapo
+        InvalidateRect(hWnd, NULL, TRUE);
         break;
 
     case WM_PAINT:
@@ -138,25 +176,31 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
         GetClientRect(hWnd, &rect);
 
         // Obter as dimensões da janela
-        RECT rect;
-        GetClientRect(hWnd, &rect);
         int windowWidth = rect.right - rect.left;
         int windowHeight = rect.bottom - rect.top;
 
         // Obter as dimensões do bitmap
-
         int bitmapWidth = bmpBoard.bmWidth;
         int bitmapHeight = bmpBoard.bmHeight;
-
 
 
         // Calcular as coordenadas para centralizar o bitmap
         int x = (windowWidth - bitmapWidth) / 2;
         int y = (windowHeight - bitmapHeight) / 2;
 
+        //calcular as coordenadas para posicionar o "frog" na meta
+        frogX = 0;
+        frogY = bitmapHeight - bmp.bmHeight;
 
-        BitBlt(hdc, 0, 0, bmp.bmWidth, bmp.bmHeight, bmpDC, 0, 0, SRCCOPY);
+        carPositionX = (bmpBoard.bmWidth - bmpCar.bmWidth) / 2; // Centralizado na largura
+        carPositionY = 0;
+
         BitBlt(hdc, x, y, bitmapWidth, bitmapHeight, bmpBoardDC, 0, 0, SRCCOPY);
+        // Desenhar o sapo na posição atual
+        BitBlt(hdc,frog.position_x, frog.position_y, bmp.bmWidth, bmp.bmHeight, bmpDC, 0, 0, SRCCOPY);
+       
+        BitBlt(hdc, carPositionX, carPositionY, bmpCar.bmWidth, bmpCar.bmHeight, bmpCarDC, 0, 0, SRCCOPY);
+
 
 
         EndPaint(hWnd, &ps);
