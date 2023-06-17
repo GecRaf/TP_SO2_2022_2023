@@ -44,18 +44,20 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
 // ============================================================================
 
     hWnd = CreateWindow(
-        szProgName,
-        TEXT("Frog Game"),
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        (HWND)HWND_DESKTOP,
-        (HMENU)NULL,
-        (HINSTANCE)hInst,
-        0
-    );
+        szProgName, // Nome da janela (programa) definido acima
+        TEXT("Frog"), // Texto que figura na barra do título
+        WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU, // Estilo da janela (WS_OVERLAPPED= normal)
+        CW_USEDEFAULT, // Posição x pixels (default=à direita da última)
+        CW_USEDEFAULT, // Posição y pixels (default=abaixo da última)
+        1000, // Largura da janela (em pixels)
+        800, // Altura da janela (em pixels)
+        (HWND)HWND_DESKTOP, // handle da janela pai (se se criar uma a partir de
+        // outra) ou HWND_DESKTOP se a janela for a primeira, 
+        // criada a partir do "desktop"
+        (HMENU)NULL, // handle do menu da janela (se tiver menu)
+        (HINSTANCE)hInst, // handle da instância do programa actual ("hInst" é 
+        // passado num dos parâmetros de WinMain()
+        0); // Não há parâmetros adicionais para a janela
 
 
 // ============================================================================
@@ -97,7 +99,7 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
 
     case WM_CREATE:
         hBmp = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/frog1.bmp"), IMAGE_BITMAP, 35, 35, LR_LOADFROMFILE);
-        hBmpBoard = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/areaJogo.bmp"), IMAGE_BITMAP, 35, 35, LR_LOADFROMFILE);
+        hBmpBoard = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/areaJogo.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
         
         GetObject(hBmp, sizeof(bmp), &bmp);
         GetObject(hBmpBoard,sizeof(bmpBoard),&bmpBoard);
@@ -113,6 +115,21 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
 
         GetClientRect(hWnd, &rect);
 
+        // Defina o novo tamanho desejado para o bitmap hBmpBoard
+        int novoLargura = 50; // Nova largura em pixels
+        int novoAltura = 50; // Nova altura em pixels
+
+        // Criar um novo bitmap com o novo tamanho
+        HBITMAP hNovoBmpBoard = CreateCompatibleBitmap(hdc, novoLargura, novoAltura);
+
+        // Selecionar o novo bitmap no contexto de dispositivo
+        HBITMAP hOldBmpBoard = (HBITMAP)SelectObject(bmpBoardDC, hNovoBmpBoard);
+
+        // Redimensionar o bitmap usando StretchBlt
+        StretchBlt(bmpBoardDC, 0, 0, novoLargura, novoAltura, hdc, 0, 0, bmpBoard.bmWidth, bmpBoard.bmHeight, SRCCOPY);
+
+        // Restaurar o bitmap original no contexto de dispositivo
+        SelectObject(bmpBoardDC, hOldBmpBoard);
 
         break;
 
@@ -127,10 +144,9 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
         int windowHeight = rect.bottom - rect.top;
 
         // Obter as dimensões do bitmap
-        BITMAP bm;
-        GetObject(hBmp, sizeof(BITMAP), &bm);
-        int bitmapWidth = bm.bmWidth;
-        int bitmapHeight = bm.bmHeight;
+
+        int bitmapWidth = bmpBoard.bmWidth;
+        int bitmapHeight = bmpBoard.bmHeight;
 
 
 
