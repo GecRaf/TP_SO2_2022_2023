@@ -140,7 +140,6 @@
   <ItemGroup>
     <Image Include="..\..\Bitmaps\areaJogo.bmp" />
     <Image Include="..\..\Bitmaps\car1.bmp" />
-    <Image Include="..\..\Bitmaps\car2.bmp" />
     <Image Include="..\..\Bitmaps\frog1.bmp" />
     <Image Include="..\..\Bitmaps\frog2.bmp" />
   </ItemGroup>

@@ -88,19 +88,16 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
     static RECT rect;
     static HBITMAP hBmp;
     static HBITMAP hBmpBoard;
-    static HBITMAP hBmpPinkCar;
-    static HBITMAP hBmpRedCar;
+    static HBITMAP hBmpCar;
     static BITMAP bmp = { 0 };
     static BITMAP bmpBoard = { 0 };
-    static BITMAP bmpPinkCar = { 0 };
-    static BITMAP bmpRedCar = { 0 };
+    static BITMAP bmpCar = { 0 };
     static HDC bmpDC = NULL;
     static HDC bmpBoardDC = NULL;
-    static HDC bmpPinkCarDC = NULL; 
-    static HDC bmpRedCarDC = NULL;
+    static HDC bmpCarDC = NULL;
     ControlData* cd = (ControlData*)lParam;
     static Frogs frog = { 0 }; // Estrutura para representar o sapo
-    static Lanes lane = { 0 };
+
     PAINTSTRUCT ps;
 
     switch (messg) {
@@ -108,13 +105,11 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
     case WM_CREATE:
         hBmp = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/frog1.bmp"), IMAGE_BITMAP, 35, 35, LR_LOADFROMFILE);
         hBmpBoard = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/areaJogo.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-        hBmpPinkCar = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/car1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-        hBmpRedCar = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/car1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+        hBmpCar = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/car1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
         
         GetObject(hBmp, sizeof(bmp), &bmp);
         GetObject(hBmpBoard,sizeof(bmpBoard),&bmpBoard);
-        GetObject(hBmpPinkCar, sizeof(bmpPinkCar), &bmpPinkCar);
-        GetObject(hBmpRedCar, sizeof(bmpRedCar), &bmpRedCar);
+        GetObject(hBmpCar, sizeof(bmpCar), &bmpCar);
 
         frog.position_x = 0; // Coordenada x centralizada
         frog.position_y = bmpBoard.bmHeight - bmpBoard.bmHeight; // Coordenada y centralizada
@@ -128,19 +123,14 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
         int carPositionX = 0; // Coordenada x inicial do carro
         int carPositionY = 9;
 
-        int carPositionz = 0; // Coordenada x inicial do carro
-        int carPositionh = 9;
-
         hdc = GetDC(hWnd);
         bmpDC = CreateCompatibleDC(hdc);
         bmpBoardDC = CreateCompatibleDC(hdc);
-        bmpPinkCarDC = CreateCompatibleDC(hdc);
-        bmpRedCarDC = CreateCompatibleDC(hdc);
+        bmpCarDC = CreateCompatibleDC(hdc);
 
         SelectObject(bmpDC, hBmp);
         SelectObject(bmpBoardDC, hBmpBoard);
-        SelectObject(bmpPinkCarDC, hBmpPinkCar);
-        SelectObject(bmpRedCarDC, hBmpRedCar);
+        SelectObject(bmpCarDC, hBmpCar);
 
         ReleaseDC(hWnd, hdc);
 
@@ -202,53 +192,20 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
         frogX = 0;
         frogY = bitmapHeight - bmp.bmHeight;
 
-        //posicões dos carros
-        carPositionX = (bmpBoard.bmWidth - bmpPinkCar.bmWidth) / 2; // Centralizado na largura
-        carPositionY = (bmpBoard.bmWidth - bmpRedCar.bmWidth) / 2 - 150;
-
-        carPositionz = (bmpBoard.bmWidth - bmpRedCar.bmWidth) / 2; // Centralizado na largura
-        carPositionh = (bmpBoard.bmWidth - bmpRedCar.bmWidth) / 2 - 50;
+        carPositionX = (bmpBoard.bmWidth - bmpCar.bmWidth) / 2; // Centralizado na largura
+        carPositionY = 0;
 
         BitBlt(hdc, x, y, bitmapWidth, bitmapHeight, bmpBoardDC, 0, 0, SRCCOPY);
         // Desenhar o sapo na posição atual
         BitBlt(hdc,frog.position_x, frog.position_y, bmp.bmWidth, bmp.bmHeight, bmpDC, 0, 0, SRCCOPY);
        
-        
-        // Definir as coordenadas e desenhar os carros
-        int carSpacing = 100; // Espaçamento entre os carros
-        int carPositionR = (bmpBoard.bmHeight - bmpPinkCar.bmHeight) / 2 - 150; // Posição y inicial dos carros
-
-        for (int row = 0; row < 2; row++) {
-
-            int carPositionX = (bmpBoard.bmWidth - bmpPinkCar.bmWidth - carSpacing * 4) / 2; // Posição x inicial dos carros
-
-            for (int carIndex = 0; carIndex < 4; carIndex++) {
-                // Desenhar carro rosa
-                BitBlt(hdc, carPositionX, carPositionY, bmpPinkCar.bmWidth, bmpPinkCar.bmHeight, bmpPinkCarDC, 0, 0, SRCCOPY);
-
-                // Desenhar carro vermelho
-                BitBlt(hdc, carPositionX, carPositionY + 50, bmpRedCar.bmWidth, bmpRedCar.bmHeight, bmpRedCarDC, 0, 0, SRCCOPY);
-
-                // Atualizar a posição x para o próximo carro
-                carPositionX += bmpRedCar.bmWidth + carSpacing;
-            }
-
-            // Atualizar a posição y para a próxima linha de carros
-            carPositionY += bmpRedCar.bmHeight * 2 + carSpacing;
-            // Redefinir a posição x para a primeira coluna de carros
-            carPositionX = (bmpBoard.bmWidth - bmpPinkCar.bmWidth - carSpacing * 3) / 2;
-        }
+        BitBlt(hdc, carPositionX, carPositionY, bmpCar.bmWidth, bmpCar.bmHeight, bmpCarDC, 0, 0, SRCCOPY);
 
 
-        // Atualizar as coordenadas dos carros
-        carPositionX += lane.car_speed;
-        if (carPositionX >= bmpBoard.bmWidth) {
-            carPositionX = bmpPinkCar.bmWidth - carSpacing;
-        }
 
         EndPaint(hWnd, &ps);
 
-        break; 
+        break;
     case WM_CLOSE:
         if (MessageBox(hWnd, TEXT("Tem a certeza que quer sair?"), TEXT("Confirmação"), MB_ICONQUESTION | MB_YESNO) == IDYES) {
             DestroyWindow(hWnd);
