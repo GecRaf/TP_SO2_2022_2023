@@ -52,6 +52,8 @@ typedef struct {
 	int score;
 	int position_x;
 	int position_y;
+	int last_position_x; // Posição x anterior do sapo
+	int last_position_y; // Posição y anterior do sapo
 } Frogs;
 
 typedef struct {

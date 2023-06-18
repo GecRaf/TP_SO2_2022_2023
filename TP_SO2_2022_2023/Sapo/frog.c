@@ -44,18 +44,20 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
 // ============================================================================
 
     hWnd = CreateWindow(
-        szProgName,
-        TEXT("Frog Game"),
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        (HWND)HWND_DESKTOP,
-        (HMENU)NULL,
-        (HINSTANCE)hInst,
-        0
-    );
+        szProgName, // Nome da janela (programa) definido acima
+        TEXT("Frog"), // Texto que figura na barra do título
+        WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU, // Estilo da janela (WS_OVERLAPPED= normal)
+        CW_USEDEFAULT, // Posição x pixels (default=à direita da última)
+        CW_USEDEFAULT, // Posição y pixels (default=abaixo da última)
+        1000, // Largura da janela (em pixels)
+        800, // Altura da janela (em pixels)
+        (HWND)HWND_DESKTOP, // handle da janela pai (se se criar uma a partir de
+        // outra) ou HWND_DESKTOP se a janela for a primeira, 
+        // criada a partir do "desktop"
+        (HMENU)NULL, // handle do menu da janela (se tiver menu)
+        (HINSTANCE)hInst, // handle da instância do programa actual ("hInst" é 
+        // passado num dos parâmetros de WinMain()
+        0); // Não há parâmetros adicionais para a janela
 
 
 // ============================================================================
@@ -83,31 +85,62 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
 
 LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam, int nCmdShow) {
     HDC hdc;
-    RECT rect;
+    static RECT rect;
     static HBITMAP hBmp;
     static HBITMAP hBmpBoard;
+    static HBITMAP hBmpPinkCar;
+    static HBITMAP hBmpRedCar;
     static BITMAP bmp = { 0 };
     static BITMAP bmpBoard = { 0 };
+    static BITMAP bmpPinkCar = { 0 };
+    static BITMAP bmpRedCar = { 0 };
     static HDC bmpDC = NULL;
     static HDC bmpBoardDC = NULL;
-
+    static HDC bmpPinkCarDC = NULL; 
+    static HDC bmpRedCarDC = NULL;
+    ControlData* cd = (ControlData*)lParam;
+    static Frogs frog = { 0 }; // Estrutura para representar o sapo
+    static Lanes lane = { 0 };
     PAINTSTRUCT ps;
 
     switch (messg) {
 
     case WM_CREATE:
         hBmp = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/frog1.bmp"), IMAGE_BITMAP, 35, 35, LR_LOADFROMFILE);
-        hBmpBoard = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/areaJogo.bmp"), IMAGE_BITMAP, 35, 35, LR_LOADFROMFILE);
+        hBmpBoard = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/areaJogo.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+        hBmpPinkCar = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/car1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+        hBmpRedCar = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/car1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
         
         GetObject(hBmp, sizeof(bmp), &bmp);
         GetObject(hBmpBoard,sizeof(bmpBoard),&bmpBoard);
+        GetObject(hBmpPinkCar, sizeof(bmpPinkCar), &bmpPinkCar);
+        GetObject(hBmpRedCar, sizeof(bmpRedCar), &bmpRedCar);
+
+        frog.position_x = 0; // Coordenada x centralizada
+        frog.position_y = bmpBoard.bmHeight - bmpBoard.bmHeight; // Coordenada y centralizada
+        frog.last_position_x = frog.position_x;
+        frog.last_position_y = frog.position_y;
+
+        // Defina as coordenadas iniciais do "frog"
+        int frogX = 0;
+        int frogY = bmpBoard.bmHeight - bmp.bmHeight;
+
+        int carPositionX = 0; // Coordenada x inicial do carro
+        int carPositionY = 9;
+
+        int carPositionz = 0; // Coordenada x inicial do carro
+        int carPositionh = 9;
 
         hdc = GetDC(hWnd);
         bmpDC = CreateCompatibleDC(hdc);
         bmpBoardDC = CreateCompatibleDC(hdc);
+        bmpPinkCarDC = CreateCompatibleDC(hdc);
+        bmpRedCarDC = CreateCompatibleDC(hdc);
 
         SelectObject(bmpDC, hBmp);
         SelectObject(bmpBoardDC, hBmpBoard);
+        SelectObject(bmpPinkCarDC, hBmpPinkCar);
+        SelectObject(bmpRedCarDC, hBmpRedCar);
 
         ReleaseDC(hWnd, hdc);
 
@@ -116,36 +149,106 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
 
         break;
 
+    case WM_KEYDOWN:
+        // Guardar a posição anterior do sapo
+        frog.last_position_x = frog.position_x;
+        frog.last_position_y = frog.position_y;
+
+        switch (wParam) {
+        case VK_LEFT:
+            if (frog.position_x - FROG_SPEED >= (rect.right - rect.left - bmpBoard.bmWidth) / 2) {
+                frog.position_x -= FROG_SPEED;
+            }
+            break;
+        case VK_RIGHT:
+            if (frog.position_x + bmp.bmWidth + FROG_SPEED <= (rect.right - rect.left + bmpBoard.bmWidth) / 2) {
+                frog.position_x += FROG_SPEED;
+            }
+            break;
+        case VK_UP:
+            if (frog.position_y - FROG_SPEED >= (rect.bottom - rect.top - bmpBoard.bmHeight) / 2) {
+                frog.position_y -= FROG_SPEED;
+            }
+            break;
+        case VK_DOWN:
+            if (frog.position_y + bmp.bmHeight + FROG_SPEED <= (rect.bottom - rect.top + bmpBoard.bmHeight) / 2) {
+                frog.position_y += FROG_SPEED;
+            }
+            break;
+        }
+
+        // Redesenha a janela para atualizar a posição do sapo
+        InvalidateRect(hWnd, NULL, TRUE);
+        break;
+
     case WM_PAINT:
         hdc = BeginPaint(hWnd, &ps);
         GetClientRect(hWnd, &rect);
 
         // Obter as dimensões da janela
-        RECT rect;
-        GetClientRect(hWnd, &rect);
         int windowWidth = rect.right - rect.left;
         int windowHeight = rect.bottom - rect.top;
 
         // Obter as dimensões do bitmap
-        BITMAP bm;
-        GetObject(hBmp, sizeof(BITMAP), &bm);
-        int bitmapWidth = bm.bmWidth;
-        int bitmapHeight = bm.bmHeight;
-
+        int bitmapWidth = bmpBoard.bmWidth;
+        int bitmapHeight = bmpBoard.bmHeight;
 
 
         // Calcular as coordenadas para centralizar o bitmap
         int x = (windowWidth - bitmapWidth) / 2;
         int y = (windowHeight - bitmapHeight) / 2;
 
+        //calcular as coordenadas para posicionar o "frog" na meta
+        frogX = 0;
+        frogY = bitmapHeight - bmp.bmHeight;
 
-        BitBlt(hdc, 0, 0, bmp.bmWidth, bmp.bmHeight, bmpDC, 0, 0, SRCCOPY);
+        //posicões dos carros
+        carPositionX = (bmpBoard.bmWidth - bmpPinkCar.bmWidth) / 2; // Centralizado na largura
+        carPositionY = (bmpBoard.bmWidth - bmpRedCar.bmWidth) / 2 - 150;
+
+        carPositionz = (bmpBoard.bmWidth - bmpRedCar.bmWidth) / 2; // Centralizado na largura
+        carPositionh = (bmpBoard.bmWidth - bmpRedCar.bmWidth) / 2 - 50;
+
         BitBlt(hdc, x, y, bitmapWidth, bitmapHeight, bmpBoardDC, 0, 0, SRCCOPY);
+        // Desenhar o sapo na posição atual
+        BitBlt(hdc,frog.position_x, frog.position_y, bmp.bmWidth, bmp.bmHeight, bmpDC, 0, 0, SRCCOPY);
+       
+        
+        // Definir as coordenadas e desenhar os carros
+        int carSpacing = 100; // Espaçamento entre os carros
+        int carPositionR = (bmpBoard.bmHeight - bmpPinkCar.bmHeight) / 2 - 150; // Posição y inicial dos carros
 
+        for (int row = 0; row < 2; row++) {
+
+            int carPositionX = (bmpBoard.bmWidth - bmpPinkCar.bmWidth - carSpacing * 4) / 2; // Posição x inicial dos carros
+
+            for (int carIndex = 0; carIndex < 4; carIndex++) {
+                // Desenhar carro rosa
+                BitBlt(hdc, carPositionX, carPositionY, bmpPinkCar.bmWidth, bmpPinkCar.bmHeight, bmpPinkCarDC, 0, 0, SRCCOPY);
+
+                // Desenhar carro vermelho
+                BitBlt(hdc, carPositionX, carPositionY + 50, bmpRedCar.bmWidth, bmpRedCar.bmHeight, bmpRedCarDC, 0, 0, SRCCOPY);
+
+                // Atualizar a posição x para o próximo carro
+                carPositionX += bmpRedCar.bmWidth + carSpacing;
+            }
+
+            // Atualizar a posição y para a próxima linha de carros
+            carPositionY += bmpRedCar.bmHeight * 2 + carSpacing;
+            // Redefinir a posição x para a primeira coluna de carros
+            carPositionX = (bmpBoard.bmWidth - bmpPinkCar.bmWidth - carSpacing * 3) / 2;
+        }
+
+
+        // Atualizar as coordenadas dos carros
+        carPositionX += lane.car_speed;
+        if (carPositionX >= bmpBoard.bmWidth) {
+            carPositionX = bmpPinkCar.bmWidth - carSpacing;
+        }
 
         EndPaint(hWnd, &ps);
 
-        break;
+        break; 
     case WM_CLOSE:
         if (MessageBox(hWnd, TEXT("Tem a certeza que quer sair?"), TEXT("Confirmação"), MB_ICONQUESTION | MB_YESNO) == IDYES) {
             DestroyWindow(hWnd);
