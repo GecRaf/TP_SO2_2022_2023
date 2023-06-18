@@ -47,6 +47,16 @@ void boardInitializer(ControlData* cd) {
 			}
 		}
 	}
+
+	// Initialize the lanes
+	for (int i = 0; i < cd->g->number_of_lanes; i++) {
+		cd->g->l[i].direction = 0;
+		cd->g->l[i].car_speed = cd->g->initial_speed;
+		cd->g->l[i].car_distance = 2;
+	}
+
+	cd->g->game_time = DEFAULT_GAME_TIME;
+	cd->g->game_level = 1;
 }
 
 void clear_screen() {
@@ -298,6 +308,7 @@ DWORD WINAPI placeCar(LPVOID car) {
 	// This thread will be responsible for placing the cars in the board
 	
 	ControlData* cd = (ControlData*)car;
+	Lanes *l = cd->g->l;
 	int row = 1;
 	int col = 0;
 	int carIndex = 0;
@@ -310,6 +321,8 @@ DWORD WINAPI placeCar(LPVOID car) {
 				cd->car[carIndex].position_y = col;
 				carIndex++;
 				col+=2;
+				// Fill the lane with the car
+				l[row].number_of_cars++;
 			}
 		}
 		col = 0;
@@ -322,11 +335,16 @@ DWORD WINAPI runCar(LPVOID carRun) {
 
 	ControlData* cd = (ControlData*)carRun;
 	CRITICAL_SECTION* cs = &cd->cs;
+	Lanes *l = cd->g->l;
 	int carNumber = 12;
 	int previousPos = 0;
 	int newPos = 0;
 
 	COORD current_pos = get_cursor_pos();
+
+	COORD command_pos;
+	command_pos.X = 43;
+	command_pos.Y = 8;
 
 	COORD print_cord;
 	print_cord.X = 5;
@@ -335,7 +353,7 @@ DWORD WINAPI runCar(LPVOID carRun) {
 
 	while (!cd->threadStop)
 	{
-		WaitForSingleObject(cd->hMutex, INFINITE);
+		WaitForSingleObject(cd->restartEvent, INFINITE); // TODO: Review this later, it has to be another event
 		for (int i = 0; i < carNumber; i++) {
 			Sleep(1000);
 			// Update game time converting seconds to minutes and seconds
@@ -348,14 +366,17 @@ DWORD WINAPI runCar(LPVOID carRun) {
 				set_cursor_pos(game_over_cord);
 
 				_tprintf(TEXT("Game Over!"));
+				cd->g->game_time = DEFAULT_GAME_TIME;
 				LeaveCriticalSection(cs);
-				set_cursor_pos(current_pos);
+				set_cursor_pos(command_pos);
 				break;
 			}
 			cd->g->game_time = cd->g->game_time - 1;
 			previousPos = cd->car[i].position_y;
 			
-			if (cd->g->invert == 0) {
+			// Check what's the lane direction and move the car accordingly
+			// TODO: Review this logic, it's not working properly
+			if (l[i].direction == 0) {
 				int difference = (MAX_BOARD_COL - 1) - previousPos;
 				if (difference < cd->g->initial_speed)
 				{
@@ -366,7 +387,7 @@ DWORD WINAPI runCar(LPVOID carRun) {
 					newPos = cd->car[i].position_y += cd->g->initial_speed;
 				}
 			}
-			else if (cd->g->invert == 1) {
+			else if (l[i].direction == 1) {
 				int difference = 0 + previousPos;
 				if (difference < cd->g->initial_speed) {
 					newPos = cd->car[i].position_y = 19 - difference;
@@ -375,6 +396,7 @@ DWORD WINAPI runCar(LPVOID carRun) {
 					newPos = cd->car[i].position_y -= cd->g->initial_speed;
 				}
 			}
+			
 			cd->g->board[cd->car[i].position_x][previousPos] = TEXT('.');
 			cd->g->board[cd->car[i].position_x][newPos] = TEXT('C');
 			SetEvent(cd->eventHandle);
@@ -407,7 +429,9 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 		fflush(stdin);
 		_tprintf(TEXT("[Server.c/server_manager] Enter a command: "));
 
-		COORD current_pos = get_cursor_pos();
+		COORD current_pos;
+		current_pos.X = 43;
+		current_pos.Y = 8;
 
 		COORD title_pos;
 		title_pos.X = 0;
@@ -435,9 +459,10 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 		if (_tcscmp(command, TEXT("help")) == 0) {
 			clear_line(print_cord);
 			_tprintf(TEXT("\n\n\t[Server.c/server_manager] Available commands:\n"));
-			_tprintf(TEXT("\t\t[Server.c/server_manager] help\n"));
-			_tprintf(TEXT("\t\t[Server.c/server_manager] clear\n"));
-			_tprintf(TEXT("\t\t[Server.c/server_manager] exit\n"));
+			_tprintf(TEXT("\t\t[Server.c/server_manager] help - list of available commands\n"));
+			_tprintf(TEXT("\t\t[Server.c/server_manager] clear - clear the screen\n"));
+			_tprintf(TEXT("\t\t[Server.c/server_manager] restart - restart the game\n"));
+			_tprintf(TEXT("\t\t[Server.c/server_manager] exit - exit the game\n"));
 		}
 		else if (_tcscmp(command, TEXT("exit")) == 0) {
 			_tprintf(TEXT("\t[!] Server shutting down...\n"));
@@ -454,7 +479,17 @@ DWORD WINAPI server_manager(LPVOID lparam) {
 			clear_screen();
 			ascii_printer();
 		}
+		else if (_tcscmp(command, TEXT("restart")) == 0) {
+			clear_line(current_pos);
+			boardInitializer(cd);
+			SetEvent(cd->restartEvent);
+			SetEvent(cd->eventHandle);
+			_tprintf(TEXT("\n\n\t[Server.c/server_manager] Game restarted!\n"));
+			Sleep(1000);
+			clear_line(current_pos);
+		}
 		else {
+			clear_line(current_pos);
 			_tprintf(TEXT("\tUnknown command.\n"));
 			Sleep(1000);
 			clear_screen();
@@ -559,7 +594,8 @@ DWORD WINAPI operator_command_receiver(LPVOID lparam) {
 				ResetEvent(cd->eventHandle);
 			}
 			else if (_tcscmp(args[0], _T("invert")) == 0) {
-				cd->g->invert = !cd->g->invert;
+				//cd->g->invert = !cd->g->invert;
+				cd->g->l[_wtoi(args[1])].direction = 1;
 			}
 		}
 		else {
@@ -769,6 +805,11 @@ int _tmain(int argc, TCHAR* argv[]) {
 			_tprintf(TEXT("[Server.c/_tmain] Error creating event\n"));
 			return -1;
 		}
+		cd.restartEvent = CreateEvent(NULL, TRUE, FALSE, TEXT("RestartEvent"));
+		if (cd.restartEvent == NULL) {
+			_tprintf(TEXT("[Server.c/_tmain] Error creating event\n"));
+			return -1;
+		}
 
 		cd.g->number_of_lanes = nr_of_lanes;
 		cd.g->initial_speed = init_speed;
@@ -927,6 +968,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 		}*/
 
 		boardInitializer(&cd);
+		SetEvent(cd.restartEvent);
 
 		WaitForSingleObject(server_manager_thread, INFINITE);
 		WaitForSingleObject(operator_command_receiver_thread, INFINITE);

@@ -74,42 +74,42 @@ typedef struct {
 typedef struct {
 	int position_x;
 	int position_y;
-}Cars;
+} Cars;
 
-//Estruturas para pipes
 typedef struct {
 	HANDLE hInstancia;
 	OVERLAPPED overlap;
 	BOOL ativo;
 	TCHAR pressedKey[100];
 	int pid;
-}Data;
+} Data;
 
 typedef struct {
 	Data hPipes[MAX_FROGS];
 	HANDLE hEvents[MAX_FROGS];
 	HANDLE hMutex;
 	int terminar;
-}ThreadDados;
+} ThreadDados;
 
 typedef struct {
 	Game* g;
 	ThreadDados* Td;
+	Frogs* f1;
+	Frogs* f2;
+	Lanes* lane;
+	Cars car[16];
 	LPCTSTR shared_memmory_ptr;
+	DWORD threadStop;
+	CRITICAL_SECTION cs;
 	HANDLE hSemWrite;
 	HANDLE hSemRead;
 	HANDLE hMutex;
-	DWORD threadStop;
 	HANDLE eventHandle;
 	HANDLE comms;
-	Frogs* f1;
-	Frogs* f2;
-	Cars car[16];
-	Lanes* lane;
 	HANDLE closingEvent;
 	HANDLE hTypingEvent;
-	CRITICAL_SECTION cs;
 	HANDLE h_console;
+	HANDLE restartEvent;
 } ControlData;
 
 // Functions
