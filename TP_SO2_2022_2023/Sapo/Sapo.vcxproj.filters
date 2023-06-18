@@ -45,5 +45,8 @@
     <Image Include="..\..\Bitmaps\car1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\..\Bitmaps\car2.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
 ﻿  frog.c
 C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Sapo\frog.c(86,98): warning C4029: lista de parâmetros formais declarada diferente da definição
-C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Sapo\frog.c(269,28): warning C4267: 'função': conversão de 'size_t' para 'DWORD', possível perda de dados
+C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\Sapo\frog.c(312,28): warning C4267: 'função': conversão de 'size_t' para 'DWORD', possível perda de dados
   Sapo.vcxproj -> C:\Users\olive\OneDrive\Documentos\EI\TP_SO2_2022_2023\TP_SO2_2022_2023\x64\Debug\Frog.exe
