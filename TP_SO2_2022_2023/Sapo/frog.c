@@ -10,16 +10,16 @@ LRESULT CALLBACK TrataEventos(HWND, UINT, WPARAM, LPARAM);
 
 TCHAR szProgName[] = TEXT("Frog");
 
-int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow){
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow) {
 
     HWND hWnd;
     MSG lpMsg;
     WNDCLASSEX wcApp;
 
-// ============================================================================
-// 1. Definição das características da janela "wcApp" 
-//    (Valores dos elementos da estrutura "wcApp" do tipo WNDCLASSEX)
-// ============================================================================
+    // ============================================================================
+    // 1. Definição das características da janela "wcApp" 
+    //    (Valores dos elementos da estrutura "wcApp" do tipo WNDCLASSEX)
+    // ============================================================================
     wcApp.cbSize = sizeof(WNDCLASSEX);   // Tamanho da estrutura WNDCLASSEX
     wcApp.hInstance = hInst; // Instância da janela actualmente exibida 
     wcApp.lpszClassName = szProgName;  // Nome da janela
@@ -33,15 +33,15 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
     wcApp.cbWndExtra = 0;
     wcApp.hbrBackground = CreateSolidBrush(RGB(255, 255, 255)); //cor de fundo da janela
 
-// ============================================================================
-// 2. Registar a classe "wcApp" no Windows
-// ============================================================================
+    // ============================================================================
+    // 2. Registar a classe "wcApp" no Windows
+    // ============================================================================
     if (!RegisterClassEx(&wcApp))
         return(0);
 
-// ============================================================================
-// 3. Criar a janela
-// ============================================================================
+    // ============================================================================
+    // 3. Criar a janela
+    // ============================================================================
 
     hWnd = CreateWindow(
         szProgName, // Nome da janela (programa) definido acima
@@ -60,26 +60,26 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nC
         0); // Não há parâmetros adicionais para a janela
 
 
-// ============================================================================
-// 4. Mostrar a janela
-// ============================================================================
+    // ============================================================================
+    // 4. Mostrar a janela
+    // ============================================================================
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
 
 
-    
-// ============================================================================
-// 5. Loop de Mensagens
-// ============================================================================
+
+    // ============================================================================
+    // 5. Loop de Mensagens
+    // ============================================================================
 
     while (GetMessage(&lpMsg, NULL, 0, 0)) {
         TranslateMessage(&lpMsg);
         DispatchMessage(&lpMsg);
     }
 
-// ============================================================================
-// 6. Fim do programa
-// ============================================================================
+    // ============================================================================
+    // 6. Fim do programa
+    // ============================================================================
     return((int)lpMsg.wParam);
 }
 
@@ -96,23 +96,32 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
     static BITMAP bmpRedCar = { 0 };
     static HDC bmpDC = NULL;
     static HDC bmpBoardDC = NULL;
-    static HDC bmpPinkCarDC = NULL; 
+    static HDC bmpPinkCarDC = NULL;
     static HDC bmpRedCarDC = NULL;
     ControlData* cd = (ControlData*)lParam;
     static Frogs frog = { 0 }; // Estrutura para representar o sapo
     static Lanes lane = { 0 };
     PAINTSTRUCT ps;
+    HANDLE hSemServer;
 
     switch (messg) {
 
     case WM_CREATE:
+
+        hSemServer = OpenSemaphore(SEMAPHORE_ALL_ACCESS, FALSE, SEMAPHORE_SERVER);
+        if (hSemServer == NULL) {
+            if (MessageBox(hWnd, TEXT("Server is not running. Please start the server and try again."), TEXT("Error!"), MB_ICONSTOP | MB_OK)) {
+                DestroyWindow(hWnd);
+            }
+        }
+
         hBmp = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/frog1.bmp"), IMAGE_BITMAP, 35, 35, LR_LOADFROMFILE);
         hBmpBoard = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/areaJogo.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
         hBmpPinkCar = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/car1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
         hBmpRedCar = (HBITMAP)LoadImage(NULL, TEXT("../../Bitmaps/car1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-        
+
         GetObject(hBmp, sizeof(bmp), &bmp);
-        GetObject(hBmpBoard,sizeof(bmpBoard),&bmpBoard);
+        GetObject(hBmpBoard, sizeof(bmpBoard), &bmpBoard);
         GetObject(hBmpPinkCar, sizeof(bmpPinkCar), &bmpPinkCar);
         GetObject(hBmpRedCar, sizeof(bmpRedCar), &bmpRedCar);
 
@@ -145,7 +154,6 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
         ReleaseDC(hWnd, hdc);
 
         GetClientRect(hWnd, &rect);
-
 
         break;
 
@@ -211,9 +219,9 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
 
         BitBlt(hdc, x, y, bitmapWidth, bitmapHeight, bmpBoardDC, 0, 0, SRCCOPY);
         // Desenhar o sapo na posição atual
-        BitBlt(hdc,frog.position_x, frog.position_y, bmp.bmWidth, bmp.bmHeight, bmpDC, 0, 0, SRCCOPY);
-       
-        
+        BitBlt(hdc, frog.position_x, frog.position_y, bmp.bmWidth, bmp.bmHeight, bmpDC, 0, 0, SRCCOPY);
+
+
         // Definir as coordenadas e desenhar os carros
         int carSpacing = 100; // Espaçamento entre os carros
         int carPositionR = (bmpBoard.bmHeight - bmpPinkCar.bmHeight) / 2 - 150; // Posição y inicial dos carros
@@ -248,7 +256,7 @@ LRESULT CALLBACK TrataEventos(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lPara
 
         EndPaint(hWnd, &ps);
 
-        break; 
+        break;
     case WM_CLOSE:
         if (MessageBox(hWnd, TEXT("Tem a certeza que quer sair?"), TEXT("Confirmação"), MB_ICONQUESTION | MB_YESNO) == IDYES) {
             DestroyWindow(hWnd);
@@ -280,12 +288,24 @@ int _tmain(int argc, LPTSTR argv[]) {
     int i = 0;
     BOOL ret;
     DWORD n;
+    ControlData cd;
+    ThreadDados pData;
 
 #ifdef UNICODE
     _setmode(_fileno(stdin), _O_WTEXT);
     _setmode(_fileno(stdout), _O_WTEXT);
     _setmode(_fileno(stderr), _O_WTEXT);
 #endif
+
+    cd.Td = &pData;
+    for (int i = 0; i < MAX_FROGS; i++) {
+        cd.Td->hEvents[i] = CreateEvent(NULL, TRUE, FALSE, NULL);
+        if (cd.Td->hEvents[i] == NULL) {
+            _tprintf(_T("[Frog.c/_tmain] Error creating event\n"));
+            exit(-1);
+        }
+        SetEvent(cd.Td->hEvents[i]);
+    }
 
     _tprintf(TEXT("Wait for pipe '%s' (WaitNamedPipe)\n"),
         NOME_PIPE);
@@ -308,7 +328,7 @@ int _tmain(int argc, LPTSTR argv[]) {
             _tprintf(TEXT(" %d %d... (ReadFile)\n"), ret, n);
             break;
         }
-       
+
         CharUpperBuff(buf, _tcslen(buf));
 
 
@@ -316,7 +336,7 @@ int _tmain(int argc, LPTSTR argv[]) {
             _tprintf(TEXT("[ERROR] Write on pipe! (WriteFile)\n"));
             exit(-1);
         }
-        
+
     }
     CloseHandle(hPipe);
     Sleep(200);

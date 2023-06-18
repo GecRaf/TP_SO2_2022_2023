@@ -4,5 +4,5 @@
 
 #include "../Servidor/server.h"
 
-#define FROG_SPEED 10
+#define FROG_SPEED 42
 #define FROG_SIZE 35

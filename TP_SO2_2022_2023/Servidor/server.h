@@ -91,6 +91,7 @@ typedef struct {
 	Data hPipes[MAX_FROGS];
 	HANDLE hEvents[MAX_FROGS];
 	HANDLE hMutex;
+	HANDLE connect_frog;
 	int terminar;
 }ThreadDados;
 

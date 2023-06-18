@@ -95,11 +95,8 @@ DWORD WINAPI update_board(LPVOID params) {
 	while (!cd->threadStop) {
 		WaitForSingleObject(cd->eventHandle, INFINITE);
 		if (cd->threadStop) break;
-		//clear_screen();
-		//ascii_printer();
 		print_board(cd);
 		ResetEvent(cd->eventHandle);
-		//_tprintf(TEXT("[Operator.c/operator_manager] Enter a command: "));
 	}
 }
 

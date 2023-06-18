@@ -586,25 +586,26 @@ DWORD WINAPI connectFrogs(LPVOID param) {
 	TCHAR buff[BUF_TAM];
 	DWORD n;
 
-	for (int i = 0; i < MAX_FROGS; i++) {
-
-		WaitForSingleObject(pData->hMutex, INFINITE);
-		if (pData->hPipes[i].ativo) {
-			if (!WriteFile(pData->hPipes[i].hInstancia, buff, (DWORD)_tcslen(buff) * sizeof(TCHAR), &n, NULL)) {
-				_tprintf(TEXT("[ERROR] Write on pipe! (WriteFile)\n"));
+	while (!pData->terminar) {
+		for (int i = 0; i < MAX_FROGS; i++) {
+			WaitForSingleObject(pData->hEvents[i], INFINITE);
+			if (pData->hPipes[i].ativo) {
+				if (!WriteFile(pData->hPipes[i].hInstancia, buff, (DWORD)_tcslen(buff) * sizeof(TCHAR), &n, NULL)) {
+					_tprintf(TEXT("[ERROR] Write on pipe! (WriteFile)\n"));
+				}
+				else {
+					BOOL ret = ReadFile(pData->hPipes[i].hInstancia, buff, sizeof(buff), &n, NULL);
+				}
 			}
-			else {
-				BOOL ret = ReadFile(pData->hPipes[i].hInstancia, buff, sizeof(buff), &n, NULL);
-			}
+			ResetEvent(pData->hEvents[i]);
 		}
-		ReleaseMutex(pData->hMutex);
+		pData->terminar = TRUE;
+		_tprintf(TEXT("(DisconnectNamedPipe)\n"));
+
+		/*for (int i = 0; i < MAX_FROGS; i++)
+			SetEvent(pData->hEvents[i]);*/
 	}
-	pData->terminar = TRUE;
-	_tprintf(TEXT("(DisconnectNamedPipe)\n"));
-
-	for (int i = 0; i < MAX_FROGS; i++)
-		SetEvent(pData->hEvents[i]);
-
+	
 	return 0;
 }
 
@@ -782,7 +783,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 		dados.terminar = FALSE;
 		dados.hMutex = CreateMutex(NULL, FALSE, NULL);
 		if (dados.hMutex == NULL) {
-			_tprintf("[Server.c/_tmain] Error creating mutex\n");
+			_tprintf(TEXT("[Server.c/_tmain] Error creating mutex\n"));
 			return (-1);
 		}
 
@@ -809,7 +810,7 @@ int _tmain(int argc, TCHAR* argv[]) {
 				_tprintf(TEXT("[Server.c/_tmain] Connection successful! (ConnectNamedPipe)\n"));
 				exit(-1);
 			}
-			_tprintf(_T("[Server.c/_tmain] Instance succefully created\n"));
+			_tprintf(_T("[Server.c/_tmain] Instance '%d' successfully created\n"), i);
 		}
 
 		hThread = CreateThread(NULL, 0, connectFrogs, &dados, 0, NULL);
@@ -855,13 +856,13 @@ int _tmain(int argc, TCHAR* argv[]) {
 
 		for (int i = 0; i < MAX_FROGS; i++) {
 			DisconnectNamedPipe(dados.hPipes[i].hInstancia);
-			CloseHandle(dados.hEvents[i]);
-			CloseHandle(dados.hPipes[i].hInstancia);
+			//CloseHandle(dados.hEvents[i]);
+			//CloseHandle(dados.hPipes[i].hInstancia);
 			_tprintf(_T("[Server.c/_tmain] Instance closed\n"));
 		}
 
-		CloseHandle(dados.hMutex);
-		CloseHandle(dados.hEvents);
+		//CloseHandle(dados.hMutex);
+		//CloseHandle(dados.hEvents);
 
 		// Create a thread to manage the server
 		// Lots of threads going on, one for acceptiing clients, others for managing the clients and messages
